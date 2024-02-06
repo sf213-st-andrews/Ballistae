@@ -26,7 +26,7 @@ class Rock {
     }
 
     void explode() {
-        explosion = new Explosion(position);
+        explosion = new Explosion(new PVector(position.x, position.y));
         // explosion.draw();// May Cause Issues
         exploded = true;
         // Delete Self

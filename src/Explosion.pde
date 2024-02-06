@@ -3,7 +3,7 @@
 class Explosion {
     PVector pos;
     // PVector velocity;?
-    int radius = 40;
+    int radius = 100;
     int lifetime = 10;// How long the explosion stays before it self deletes
     // Constructor
     Explosion(PVector pos) {
