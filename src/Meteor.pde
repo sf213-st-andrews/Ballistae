@@ -31,7 +31,7 @@ class Meteor {
 
 	void draw() {
 		fill(169, 169, 169); // Temp Dark Grey
-		ellipse(this.position.x, this.position.y, 30, 30);
+		ellipse(this.position.x, this.position.y, radius, radius);
 		update();
 	}
 }

@@ -9,7 +9,7 @@ class Bomb {
     PVector acceleration;
     // float invMass;
     boolean exploded;
-    Explosion explosion;
+    private Explosion explosion;
     
     // Constructor
     Bomb(PVector pos, PVector vel) {
@@ -43,5 +43,9 @@ class Bomb {
         // Graphics
         fill(0, 0, 0);// Temp Black
         ellipse(this.position.x, this.position.y, 20, 20);
+    }
+
+    public Explosion getExplosion() {
+        return explosion;
     }
 }
