@@ -1,34 +1,35 @@
-// Rock.pde
+// Meteor.pde
 
 // Damping or Actual Drag?
-private static final float ROCK_DAMPING = .996f;
+private static final float METEOR_DAMPING = .95f;
 
-class Rock {
+class Meteor {
     PVector position;
     PVector velocity;
     PVector acceleration;
-    // float invMass;
-
+    float invMass;
+    
     // Constructor
-    Rock(PVector pos, PVector vel) {
+    Meteor(PVector pos, PVector vel) {
         this.position = pos;
         this.velocity = vel;
         this.acceleration = new PVector(0, GRAVITY);
     }
-
+    
     void update() {
         position.add(velocity);
         velocity.add(acceleration);
-        velocity.mult(ROCK_DAMPING);
+        velocity.mult(METEOR_DAMPING);
     }
-
+    
     void explode() {
         Explosion explode = new Explosion(position);
         // Delete Self
     }
-
+    
     void draw() {
-        fill(0, 0, 0);// Temp Black
-        ellipse(this.position.x, this.position.y, 20, 20);
+        fill(169, 169, 169);// Temp Dark Grey
+        ellipse(this.position.x, this.position.y, 30, 30);
+		update();
     }
 }

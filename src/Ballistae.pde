@@ -6,7 +6,7 @@ class Ballistae {
 	// Temp
 	Rock rock;// = new Rock(pos, new PVector(0,0));
 	boolean fired = false;
-	float magReduce = 0.01f;
+	float magReduce = 0.025f;
     
     Ballistae(PVector cityPos) {
         this.pos = PVector.add(cityPos, new PVector(50, -20));
@@ -15,9 +15,9 @@ class Ballistae {
     
     void fireRock(PVector mousePos) {
         // Just a test, Rock ammo should be handled carefully
-		PVector bPos = new PVector(pos.x, pos.y);
-		rock = new Rock(bPos, PVector.sub(mousePos, pos).mult(magReduce));
+		rock = new Rock(new PVector(pos.x, pos.y), PVector.sub(mousePos, pos).mult(magReduce));
 		fired = true;
+        // System.out.println(PVector.sub(mousePos, pos).mult(magReduce));
 	}
     
     void draw() {
