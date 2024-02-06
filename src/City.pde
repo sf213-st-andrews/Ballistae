@@ -1,7 +1,8 @@
 // City.pde
 
-int buildingWidth = 40;
-int buildingHeightMin = 50;
-int buildingHeightMax = 200;
-int spacing = 20;
+class City {
+	int buildingWidth = 40;
+	int buildingHeight = 1000;
+	int spacing = 20;
+}
 
