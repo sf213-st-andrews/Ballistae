@@ -1,30 +1,32 @@
 // Ballistae.pde
 
 class Ballistae {
+    // Ballistae
+    private static final float ballistaWidth = 20;
+    private static final float ballistaHeight = 40;
+    private static final float bowstringOffset = 8;
+    
     PVector pos;
+    
+
+    // Bombs
+    ArrayList<Bomb> bombs;
 	
-	// Temp
-	Rock rock;// = new Rock(pos, new PVector(0,0));
-	boolean fired = false;
 	float magReduce = 0.025f;
     
-    Ballistae(PVector cityPos) {
+    Ballistae(PVector cityPos, ArrayList<Bomb> bombs) {
         this.pos = PVector.add(cityPos, new PVector(50, -20));
+        this.bombs = bombs;// Pass by Reference
        	// Maths are good. Wait still double check it though.
 	}
     
-    void fireRock(PVector mousePos) {
-        // Just a test, Rock ammo should be handled carefully
-		rock = new Rock(new PVector(pos.x, pos.y), PVector.sub(mousePos, pos).mult(magReduce));
-		fired = true;
+    void fireBomb(PVector mousePos) {
+        // Just a test, Bomb ammo should be handled carefully
+		bombs.add(new Bomb(new PVector(pos.x, pos.y), PVector.sub(mousePos, pos).mult(magReduce)));
         // System.out.println(PVector.sub(mousePos, pos).mult(magReduce));
 	}
     
     void draw() {
-        float ballistaWidth = 20;
-        float ballistaHeight = 40;
-        float bowstringOffset = 8;
-        
         // Draw ballista
         fill(100, 100, 100);
         rect(pos.x - ballistaWidth / 2, pos.y - ballistaHeight / 2, ballistaWidth, ballistaHeight);
@@ -37,15 +39,5 @@ class Ballistae {
         // Draw arrow
         fill(150, 75, 0);
         triangle(pos.x - 10, pos.y - 35, pos.x + 10, pos.y - 35, pos.x, pos.y - 60);
-
-		// Temp
-		if (fired) {
-			// if (!rock.exploded) {
-            //     rock.draw();// Should work, but doesn't
-            // } else {
-            //     rock.explosion.draw();
-            // }
-            rock.draw();
-		}
 	}
 }

@@ -9,10 +9,10 @@ class City {
 	Ballistae ballista;
 	
 	// Constructor
-	City(float x, float y) {
+	City(float x, float y, ArrayList<Bomb> bombs) {
         this.position = new PVector(x, y);
 		this.area = new PVector(100, 40);
-		this.ballista = new Ballistae(this.position);
+		this.ballista = new Ballistae(this.position, bombs);
 	}
 
 	void draw() {
