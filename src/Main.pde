@@ -31,15 +31,19 @@ void setup() {
 }
 
 void mousePressed() {
-    //Check if the mouse is within a specific region
-    for(int i = 0; i < cities.length; ++i) {
-        cities[i].ballista.fireRock(new PVector(mouseX, mouseY));
-	}
+    if (mouseButton == LEFT) {
+        for(int i = 0; i < cities.length; ++i) {
+            cities[i].ballista.fireRock(new PVector(mouseX, mouseY));
+	    }
+    }
+    if (mouseButton == RIGHT) {
+        for(int i = 0; i < cities.length; ++i) {
+            cities[i].ballista.rock.explode();
+	    }
+    }
 }
 
 void draw() {
-    // Physics
-
     // Graphics
     background(47, 150, 173);// Sky Color
     // Cities

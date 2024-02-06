@@ -40,10 +40,12 @@ class Ballistae {
 
 		// Temp
 		if (fired) {
-			rock.draw();
-			rock.update();//Physics in draw calls huh
-			// Why is the rock moving the ballista?
+			// if (!rock.exploded) {
+            //     rock.draw();// Should work, but doesn't
+            // } else {
+            //     rock.explosion.draw();
+            // }
+            rock.draw();
 		}
-		
 	}
 }

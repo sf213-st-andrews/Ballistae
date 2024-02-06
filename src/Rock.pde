@@ -8,12 +8,15 @@ class Rock {
     PVector velocity;
     PVector acceleration;
     // float invMass;
+    boolean exploded;
+    Explosion explosion;
 
     // Constructor
     Rock(PVector pos, PVector vel) {
         this.position = pos;
         this.velocity = vel;
         this.acceleration = new PVector(0, GRAVITY);
+        this.exploded = false;
     }
 
     void update() {
@@ -23,11 +26,20 @@ class Rock {
     }
 
     void explode() {
-        Explosion explode = new Explosion(position);
+        explosion = new Explosion(position);
+        // explosion.draw();// May Cause Issues
+        exploded = true;
         // Delete Self
+        position.set(-100, -100);// Offscreen
     }
 
     void draw() {
+        if (exploded) {
+            explosion.draw();
+            return;
+        }
+        update();
+
         fill(0, 0, 0);// Temp Black
         ellipse(this.position.x, this.position.y, 20, 20);
     }
