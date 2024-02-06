@@ -2,6 +2,11 @@
 
 class Ballistae {
     PVector pos;
+	
+	// Temp
+	Rock rock;// = new Rock(pos, new PVector(0,0));
+	boolean fired = false;
+	float magReduce = 0.01f;
     
     Ballistae(PVector cityPos) {
         this.pos = PVector.add(cityPos, new PVector(50, -20));
@@ -9,7 +14,10 @@ class Ballistae {
 	}
     
     void fireRock(PVector mousePos) {
-        
+        // Just a test, Rock ammo should be handled carefully
+		PVector bPos = new PVector(pos.x, pos.y);
+		rock = new Rock(bPos, PVector.sub(mousePos, pos).mult(magReduce));
+		fired = true;
 	}
     
     void draw() {
@@ -29,5 +37,13 @@ class Ballistae {
         // Draw arrow
         fill(150, 75, 0);
         triangle(pos.x - 10, pos.y - 35, pos.x + 10, pos.y - 35, pos.x, pos.y - 60);
-    }
+
+		// Temp
+		if (fired) {
+			rock.draw();
+			rock.update();//Physics in draw calls huh
+			// Why is the rock moving the ballista?
+		}
+		
+	}
 }
