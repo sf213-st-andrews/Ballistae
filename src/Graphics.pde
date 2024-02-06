@@ -1,14 +1,9 @@
 // Graphics.pde
 
 class Graphics {
-	void drawCity(float x, float y, float w, float h) {
+	void drawCity(City city) {
 		fill(0, 0, 255);
-		rect(x, y, w, h);
-	}
-
-	void drawMissile(float x, float y) {
-		fill(0, 0, 255);
-		rect(x, y, 20, 40);
+		rect(city.position.x, city.position.y, city.area.x, city.area.y);
 	}
 
 	void drawBallistae(float x, float y) {

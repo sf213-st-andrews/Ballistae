@@ -1,64 +1,30 @@
+Physics phys;
+// Graphics gph;
+
+City cities[];
+
+final int screen_width	= 800;
+final int screen_height	= 600;
+
 int score = 0;
 
+void settings() {
+	size(screen_width, screen_height);
+}
+
 void setup() {
-    size(400, 400);
-    missileX = width / 2;
-    missileY = height - 30;
-    obstacleX = (int) random(width);
-    obstacleY = 0;
+
+	cities = new City[3];
+	cities[0] = new City(150, screen_height - 40);
+	cities[1] = new City(350, screen_height - 40);
+	cities[2] = new City(550, screen_height - 40);
 }
 
 void draw() {
-    background(0);
-    
-    //Draw missile
-    fill(0, 0, 255);
-    rectMode(CENTER);
-    rect(missileX, missileY, 20, 40);
-    
-    //Draw obstacle
-    fill(255, 0, 0);
-    rect(obstacleX, obstacleY, 30, 30);
-    
-    //Move obstacle
-    obstacleY += 5;
-    
-    //Check collision
-    if(dist(missileX, missileY, obstacleX, obstacleY) < 25) {
-        gameOver();
-}
-    
-    //Check if obstacle is out of screen
-    if(obstacleY > height) {
-        obstacleY = 0;
-        obstacleX = (int) random(width);
-        score++;
-}
-    
-    //Display score
-    fill(0);
-    textSize(20);
-    text("Score: " + score, 10, 30);
-}
-
-void keyPressed() {
-    if(key == ' ') {
-        // Shoot missile when spacebar is pressed
-        // For simplicity, the missile will move up without user control
-        missileY -= 20;
-}
-}
-
-void mouseMoved() {
-    //Move missile with the mouse
-    missileX = mouseX;
-}
-
-void gameOver() {
-    background(255, 0, 0);
-    fill(255);
-    textSize(32);
-    textAlign(CENTER, CENTER);
-    text("Game Over\nYour Score: " + score, width / 2, height / 2);
-    noLoop(); // Stop the game loop
+	background(47, 150, 173);// Sky Color
+	// Cities
+	// gph.drawCity(cities[0]);
+	for (int i = 0; i < cities.length; ++i) {
+		cities[i].draw();
+	}
 }
