@@ -1,5 +1,3 @@
-int missileX, missileY; // Missile position
-int obstacleX, obstacleY; // Obstacle position
 int score = 0;
 
 void setup() {

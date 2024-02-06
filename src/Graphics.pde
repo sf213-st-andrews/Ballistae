@@ -26,4 +26,16 @@ class Graphics {
         fill(150, 75, 0);
         triangle(x - 10, y - 35, x + 10, y - 35, x, y - 60);
 	}
+
+	void drawRock() {
+
+	}
+
+	void drawExplosion(float x, float y, float r) {
+		fill(235, 82, 52);// Orange
+		ellipse(x, y, r, r);
+		// Explosion has a yellow heart
+		fill(235, 210, 52);// Yellow
+		ellipse(x, y, r/2, r/2);
+	}
 }

@@ -1,13 +1,13 @@
 // Ballistae.pde
 
 class Ballistae {
-    float x;
-    float y;
+    PVector position
     
     Ballistae(float x, float y) {
-        this.x = x;
-        this.y = y;
-}
-    
-    
+        this.position = new PVector(x, y);
+	}
+
+	void fireRock(PVector mousePos) {
+
+	}
 }
