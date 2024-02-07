@@ -1,44 +1,38 @@
 // Ballista.pde
-
 class Ballista {
-    // Ballista
     // Graphics
     private static final float ballistaWidth = 20;
     private static final float ballistaHeight = 40;
     private static final float bowstringOffset = 8;
-    // Attributes
-    PVector pos;
-    
 
-    // Bombs
-    ArrayList<Bomb> bombs;
-	
-	float magReduce = 0.025f;
-    
-    Ballista(PVector pos, ArrayList<Bomb> bombs) {
-        this.pos = PVector.add(pos, new PVector(50, -20));
-        this.bombs = bombs;// Pass by Reference
-       	// Maths are good. Wait still double check it though.
-	}
-    
+    // Attributes
+    private PVector pos;
+    private ArrayList<Bomb> bombs;
+    private float magReduce = 0.025f;
+
+    // Constructor
+    Ballista(float x, float y, ArrayList<Bomb> bombs) {
+        this.pos = new PVector(x, y);
+        this.bombs = bombs;
+    }
+
+    // Fire a bomb towards the mouse position
     void fireBomb(PVector mousePos) {
-        // Just a test, Bomb ammo should be handled carefully
-		bombs.add(new Bomb(new PVector(pos.x, pos.y), PVector.sub(mousePos, pos).mult(magReduce)));
-        // System.out.println(PVector.sub(mousePos, pos).mult(magReduce));
-	}
-    
+        bombs.add(new Bomb(new PVector(pos.x, pos.y), PVector.sub(mousePos, pos).mult(magReduce)));
+    }
+
+    // Draw
     void draw() {
-        // Draw ballista
-        fill(100, 100, 100);
-        rect(pos.x - ballistaWidth / 2, pos.y - ballistaHeight / 2, ballistaWidth, ballistaHeight);
-        
+        // Draw tower
+        fill(150);
+        rect(pos.x, pos.y, ballistaWidth, ballistaHeight);
+
         // Draw bowstring
-        strokeWeight(2);
-        line(pos.x - bowstringOffset, pos.y - 20, pos.x - bowstringOffset, pos.y - 35);
-        line(pos.x + bowstringOffset, pos.y - 20, pos.x + bowstringOffset, pos.y - 35);
-        
-        // Draw arrow
-        fill(150, 75, 0);
-        triangle(pos.x - 10, pos.y - 35, pos.x + 10, pos.y - 35, pos.x, pos.y - 60);
-	}
+        float bowstringY = pos.y - ballistaHeight / 2;
+        line(pos.x, pos.y, pos.x, bowstringY);
+
+        // Draw ballista
+        fill(165, 42, 42);
+        ellipse(pos.x, bowstringY, 20, 20);
+    }
 }

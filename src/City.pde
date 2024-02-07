@@ -14,8 +14,6 @@ class City {
 	void draw() {
 		fill(100, 100, 100);// 13, 26, 33
 		rect(position.x, position.y, area.x, area.y);
-		// Call here not in Main
-		ballista.draw();
 	}
 }
 

@@ -27,24 +27,27 @@ void setup() {
     explosions = new ArrayList<Explosion>();
     
     // Cities
-    cities = new City[6];
+    cities = new City[2];
     int cSect = screen_width / cities.length; // Divide into sections
     int scSect = cSect / cities.length;       // For Offset to make the sections neat
     for (int i = 0; i < cities.length; i++) {
-        cities[i] = new City((cSect * i) + scSect, screen_height - 40);
+        cities[i] = new City((cSect * i) + scSect, screen_height - 20);
     }
     // Ballistae
-    ballistae = new Ballista[5];
+    ballistae = new Ballista[cities.length - 1];
     for(int i = 0; i < ballistae.length; i++) {
-        ballistae[i];
+        ballistae[i] = new Ballista((cSect * (i+1)) - 15, screen_height - 20, bombs);
     }
     
     // Meteors
     meteors = new Meteor[4];
     for (int i = 0; i < 4; i++) {
         meteors[i] = new Meteor(new PVector((screen_width / 4) * i + 15, 0),
-            newPVector((float) random( -10, 10),(float) random(0, 20)),(int) random(20, 50));
+            new PVector((float) random( -10, 10),(float) random(0, 20)),(int) random(20, 50));
     }
+
+	// TEMP? THIS IS FOR GRAPHICS BEING EASIER
+	rectMode(CENTER);
 }
 
 void mousePressed() {
@@ -65,6 +68,10 @@ void draw() {
     // Cities
     for (int i = 0; i < cities.length; i++) {
         cities[i].draw();
+    }
+	// Ballistae
+	for (int i = 0; i < ballistae.length; i++) {
+        ballistae[i].draw();
     }
     // Bombs
     for (int i = bombs.size() - 1; i >= 0; i--) {

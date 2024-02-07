@@ -28,7 +28,7 @@ class Explosion {
 		// Phys
 		update();
 
-		fill(235, 82, 52); // Orange. *2 because of how ellipse draws
+		fill(235, 82, 52); // Orange. *2 because of how ellipse draws. Add Offset?
 		ellipse(pos.x, pos.y, radius*2, radius*2);
 
 		// Explosion has a yellow heart

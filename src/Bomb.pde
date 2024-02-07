@@ -41,7 +41,7 @@ class Bomb {
         update();
         
         // Graphics
-        fill(0, 0, 0);// Temp Black
+        fill(0, 0, 0);//
         ellipse(this.position.x, this.position.y, 20, 20);
     }
 
