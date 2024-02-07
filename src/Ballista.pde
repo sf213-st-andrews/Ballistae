@@ -1,11 +1,12 @@
-// Ballistae.pde
+// Ballista.pde
 
-class Ballistae {
-    // Ballistae
+class Ballista {
+    // Ballista
+    // Graphics
     private static final float ballistaWidth = 20;
     private static final float ballistaHeight = 40;
     private static final float bowstringOffset = 8;
-    
+    // Attributes
     PVector pos;
     
 
@@ -14,8 +15,8 @@ class Ballistae {
 	
 	float magReduce = 0.025f;
     
-    Ballistae(PVector cityPos, ArrayList<Bomb> bombs) {
-        this.pos = PVector.add(cityPos, new PVector(50, -20));
+    Ballista(PVector pos, ArrayList<Bomb> bombs) {
+        this.pos = PVector.add(pos, new PVector(50, -20));
         this.bombs = bombs;// Pass by Reference
        	// Maths are good. Wait still double check it though.
 	}

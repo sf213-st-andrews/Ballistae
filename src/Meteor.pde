@@ -25,7 +25,7 @@ class Meteor {
 	}
 
 	void explode() {
-		Explosion explode = new Explosion(position);
+		Explosion explode = new Explosion(new PVector(position.x, position.y), 4, radius+10);
 		// Delete Self
 	}
 

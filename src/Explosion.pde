@@ -2,33 +2,37 @@
 
 class Explosion {
 	PVector pos;
-	int radius = 100;  // Temp put in constructor
-	int lifetime = 10; // Temp put in constructor. How long the explosion stays before it self-deletes
-	float rlRatio;     // Ratio of Radius/Lifetime
+	int maxRadius;	// The Maximum Radius
+	int radius;		// The Current Radius
+	int lifetime;	// How long the explosion stays before it self-deletes
+	int halfLife;	// Half of the lifetime. Used for graphics
 
 	// Constructor
-	Explosion(PVector pos) {
+	Explosion(PVector pos, int halfLife, int maxRadius) {
 		this.pos = new PVector(pos.x, pos.y); // Create a new PVector to avoid reference issues
-		this.rlRatio = radius / (float)lifetime; // Convert to float for accurate division
+		this.halfLife = halfLife;
+		this.lifetime = halfLife*2;
+		this.maxRadius = maxRadius;
 	}
 
 	void update() {
 		if (lifetime <= 0) {
 			return;
 		}
+		radius = maxRadius - ((halfLife - lifetime)*(halfLife - lifetime));
 		lifetime -= 1;
-		radius -= rlRatio;
+		
 	}
 
 	void draw() {
 		// Phys
 		update();
 
-		fill(235, 82, 52); // Orange
-		ellipse(pos.x, pos.y, radius, radius);
+		fill(235, 82, 52); // Orange. *2 because of how ellipse draws
+		ellipse(pos.x, pos.y, radius*2, radius*2);
 
 		// Explosion has a yellow heart
 		fill(235, 210, 52); // Yellow
-		ellipse(pos.x, pos.y, radius / 2, radius / 2);
+		ellipse(pos.x, pos.y, radius, radius);
 	}
 }

@@ -26,10 +26,10 @@ class Bomb {
     }
     
     void explode() {
-        explosion = new Explosion(new PVector(position.x, position.y));
+        explosion = new Explosion(new PVector(position.x, position.y), 8, 100);
         exploded = true;
         // Delete Self
-        position.set( - 100, -100);// Offscreen
+        position.set(-100, -100);// Offscreen
     }
     
     void draw() {
