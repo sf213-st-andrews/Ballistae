@@ -1,21 +1,18 @@
-
-public static final float GRAVITY = 0.2f;
-
-
-// Physics phys;
-// Graphics gph;
-
+// Graphics
 final int screen_width			= 1200;
 final int screen_height			= 900;
 final int screen_width_half		= screen_width/2;
 final int ground_height			= 80;
 final int ground_height_half	= ground_height/2;
 
+// Physics
+public static final float GRAVITY = 0.2f;
+
+// Objects
 City cities[];
 Ballista ballistae[];
 ArrayList<Bomb> bombs;			// Pool of ammunition
 ArrayList<Explosion> explosions;// Pool of explosions
-
 Meteor meteors[];
 
 int score = 0;
@@ -25,10 +22,11 @@ void settings() {
 }
 
 void setup() {
+	// Graphics
+	rectMode(CENTER);
     // ArrayList initialization
     bombs = new ArrayList<Bomb>();
     explosions = new ArrayList<Explosion>();
-    
     // Cities
     cities = new City[6];
     int cSect	= screen_width / cities.length; // Divide into sections
@@ -41,18 +39,14 @@ void setup() {
 	int bSect	= screen_width / ballistae.length; // Divide into sections
     int bSect_h	= bSect / 2;       				// For Offset to make the sections neat
     for(int i = 0; i < ballistae.length; i++) {
-        ballistae[i] = new Ballista((bSect * i) + bSect_h, screen_height - 70, bombs);
+        ballistae[i] = new Ballista((bSect * i) + bSect_h, screen_height - 70, bombs, explosions);
     }
     
     // Meteors
     meteors = new Meteor[4];
     for (int i = 0; i < 4; i++) {
-        meteors[i] = new Meteor(new PVector((screen_width / 4) * i + 15, 0),
-            new PVector((float) random( -10, 10),(float) random(0, 20)),(int) random(20, 50));
+        meteors[i] = new Meteor(new PVector((screen_width / 4) * i + 15, 0), new PVector((float) random( -10, 10),(float) random(0, 20)),(int) random(20, 50), explosions);
     }
-
-	// TEMP? THIS IS FOR GRAPHICS BEING EASIER
-	rectMode(CENTER);
 }
 
 void mousePressed() {
@@ -67,9 +61,27 @@ void mousePressed() {
     }
 }
 
+void keyPressed() {
+	// Not using Switch Statement b/c two buttons can be pressed at once
+	if (key == '1') {
+		ballistae[0].fireBomb(new PVector(mouseX, mouseY));
+	}
+	if (key == '2') {
+		ballistae[1].fireBomb(new PVector(mouseX, mouseY));
+	}
+	if (key == '3') {
+		ballistae[2].fireBomb(new PVector(mouseX, mouseY));
+	}
+	if (key == ' ') {
+		for (int i = 0; i < bombs.size(); i++) {
+            bombs.get(i).explode();
+        }
+	}
+}
+
 void draw() {
     // Graphics
-    background(47, 150, 173);// Sky Color
+    background(47, 150, 173);// Sky Color: 47, 150, 173
     // Ground
     fill(24, 56, 1);
     rect(screen_width_half, screen_height - ground_height_half, screen_width, ground_height);
@@ -81,19 +93,26 @@ void draw() {
 	for (int i = 0; i < ballistae.length; i++) {
         ballistae[i].draw();
     }
+	// Meteors
+    for (int i = 0; i < meteors.length; i++) {
+        meteors[i].draw();
+    }
     // Bombs
     for (int i = bombs.size() - 1; i >= 0; i--) {
         // Start from last to first so removing isn't a problem
         bombs.get(i).draw();
         if (bombs.get(i).exploded) {
-            if (bombs.get(i).getExplosion().lifetime <= 0) { 
-                bombs.remove(i);
-            }
-        }
+			bombs.remove(i);
+		}
     }
-    // Meteors
-    for (int i = 0; i < meteors.length; i++) {
-        meteors[i].draw();
+	// Explosions
+    for (int i = explosions.size() - 1; i >= 0; i--) {
+        // Start from last to first so removing isn't a problem
+        explosions.get(i).draw();
+        if (explosions.get(i).lifetime <= 0) {
+			explosions.remove(i);
+		}
     }
+    
     // System.out.println("Bombs size: " + bombs.size());
 }

@@ -9,14 +9,15 @@ class Bomb {
     PVector acceleration;
     // float invMass;
     boolean exploded;
-    private Explosion explosion;
+    private ArrayList<Explosion> explosions;
     
     // Constructor
-    Bomb(PVector pos, PVector vel) {
-        this.position = pos;
-        this.velocity = vel;
-        this.acceleration = new PVector(0, GRAVITY);
-        this.exploded = false;
+    Bomb(PVector pos, PVector vel, ArrayList<Explosion> explosions) {
+        this.position       = pos;
+        this.velocity       = vel;
+        this.acceleration   = new PVector(0, GRAVITY);
+        this.exploded       = false;
+        this.explosions     = explosions;
     }
     
     void update() {
@@ -26,26 +27,21 @@ class Bomb {
     }
     
     void explode() {
-        explosion = new Explosion(new PVector(position.x, position.y), 8, 100);
-        exploded = true;
-        // Delete Self
+        if (exploded) {return;}
+		// Add Explosion to referenced Array
+        explosions.add(new Explosion(new PVector(position.x, position.y), 8, 100));
+        // Signal for Delete Self
+		exploded = true;
+		// Move Offscreen
         position.set(-100, -100);// Offscreen
     }
     
     void draw() {
-        if (exploded) {
-            explosion.draw();// Comment out so they can be removed from the ArrayList
-            return;
-        }
+        if (exploded) {return;}
         // Physics
         update();
-        
         // Graphics
         fill(0, 0, 0);//
         ellipse(this.position.x, this.position.y, 20, 20);
-    }
-
-    public Explosion getExplosion() {
-        return explosion;
     }
 }

@@ -1,6 +1,6 @@
-// Explosion.pde
+// Explosion.pde implements Collidable
 
-class Explosion {
+class Explosion  {
 	PVector pos;
 	int maxRadius;	// The Maximum Radius
 	int radius;		// The Current Radius
@@ -16,12 +16,9 @@ class Explosion {
 	}
 
 	void update() {
-		if (lifetime <= 0) {
-			return;
-		}
+		if (lifetime <= 0) {return;}
 		radius = maxRadius - ((halfLife - lifetime)*(halfLife - lifetime));
 		lifetime -= 1;
-		
 	}
 
 	void draw() {

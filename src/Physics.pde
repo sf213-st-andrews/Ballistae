@@ -1,5 +1,0 @@
-// Physics.pde
-
-class Physics {
-    
-}
