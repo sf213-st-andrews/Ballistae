@@ -8,7 +8,7 @@ public static final float GRAVITY = 0.2f;
 final int screen_width			= 1200;
 final int screen_height			= 900;
 final int screen_width_half		= screen_width/2;
-final int ground_height			= 100;
+final int ground_height			= 80;
 final int ground_height_half	= ground_height/2;
 
 City cities[];
@@ -31,15 +31,17 @@ void setup() {
     
     // Cities
     cities = new City[6];
-    int cSect = screen_width / cities.length; // Divide into sections
-    // int scSect = cSect / cities.length;       // For Offset to make the sections neat
+    int cSect	= screen_width / cities.length; // Divide into sections
+    int cSect_h	= cSect / 2;       				// For Offset to make the sections neat
     for (int i = 0; i < cities.length; i++) {
-        cities[i] = new City((cSect * i) + 50, screen_height - 20);
+        cities[i] = new City((cSect * i) + cSect_h, screen_height - 20);
     }
     // Ballistae
-    ballistae = new Ballista[cities.length - 1];
+    ballistae = new Ballista[3];
+	int bSect	= screen_width / ballistae.length; // Divide into sections
+    int bSect_h	= bSect / 2;       				// For Offset to make the sections neat
     for(int i = 0; i < ballistae.length; i++) {
-        ballistae[i] = new Ballista((cSect * (i+1)) - 15, screen_height - 20, bombs);
+        ballistae[i] = new Ballista((bSect * i) + bSect_h, screen_height - 70, bombs);
     }
     
     // Meteors
