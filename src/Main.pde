@@ -5,8 +5,11 @@ public static final float GRAVITY = 0.2f;
 // Physics phys;
 // Graphics gph;
 
-final int screen_width	 = 1200;
-final int screen_height	 = 900;
+final int screen_width			= 1200;
+final int screen_height			= 900;
+final int screen_width_half		= screen_width/2;
+final int ground_height			= 100;
+final int ground_height_half	= ground_height/2;
 
 City cities[];
 Ballista ballistae[];
@@ -27,11 +30,11 @@ void setup() {
     explosions = new ArrayList<Explosion>();
     
     // Cities
-    cities = new City[2];
+    cities = new City[6];
     int cSect = screen_width / cities.length; // Divide into sections
-    int scSect = cSect / cities.length;       // For Offset to make the sections neat
+    // int scSect = cSect / cities.length;       // For Offset to make the sections neat
     for (int i = 0; i < cities.length; i++) {
-        cities[i] = new City((cSect * i) + scSect, screen_height - 20);
+        cities[i] = new City((cSect * i) + 50, screen_height - 20);
     }
     // Ballistae
     ballistae = new Ballista[cities.length - 1];
@@ -65,6 +68,9 @@ void mousePressed() {
 void draw() {
     // Graphics
     background(47, 150, 173);// Sky Color
+    // Ground
+    fill(24, 56, 1);
+    rect(screen_width_half, screen_height - ground_height_half, screen_width, ground_height);
     // Cities
     for (int i = 0; i < cities.length; i++) {
         cities[i].draw();
