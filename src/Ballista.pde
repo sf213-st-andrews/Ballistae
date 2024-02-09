@@ -10,7 +10,7 @@ class Ballista {
 	private PVector pos;
 	private ArrayList<Bomb> bombs;
 	ArrayList<Explosion> explosions;
-	private float magReduce = 0.025f;
+	private float magReduce = 0.05f;
 
 	// Constructor
 	Ballista(float x, float y, ArrayList<Bomb> bombs, ArrayList<Explosion> explosions) {
