@@ -8,7 +8,7 @@ final int ground_height_half	= ground_height/2;
 // Physics
 public static final float DAMPING = 0.995;
 Gravity gravity	= new Gravity(new PVector(0f, 0.2f));// 0.2f
-Drag drag		= new Drag(0.001f, 0.001f);
+Drag drag		= new Drag(0.001f, 0.001f);// Currently Drag does NOT depend on the size/surface area of the particle
 
 // Registry
 // ForceRegistry forceRegistry;
