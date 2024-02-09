@@ -19,7 +19,7 @@ ArrayList<Bomb> bombs;			// Pool of ammunition
 ArrayList<Explosion> explosions;// Pool of explosions
 Meteor meteors[];
 
-int score = 0;
+// int score = 0;
 
 void settings() {
 	size(screen_width, screen_height);
