@@ -17,7 +17,19 @@ abstract class Particle {
 
 	public abstract float getMass();
 
-	abstract void addForce(PVector force);
+	void addForce(PVector force) {
+		this.forceAccumulator.add(force);
+	}
 
-	abstract void integrate();
+	void integrate() {
+		position.add(velocity);
+
+		PVector acceleration = forceAccumulator.get();// System.out.println(super.invMass);// Print
+		acceleration.mult(invMass);
+		forceAccumulator.x = 0;// System.out.println(acceleration);// Print
+		forceAccumulator.y = 0;
+
+		velocity.add(acceleration);
+		velocity.mult(DAMPING);
+	}
 }

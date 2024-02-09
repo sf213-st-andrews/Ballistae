@@ -26,19 +26,7 @@ class Bomb extends Particle {
 		if (exploded) {
 			return;
 		}
-
-		// Physics
-		super.position.add(super.velocity);
-
-		PVector acceleration = super.forceAccumulator.get();
-		// System.out.println(super.invMass);// Print
-		acceleration.mult(super.invMass);
-		// System.out.println(acceleration);// Print
-		super.forceAccumulator.x = 0;
-		super.forceAccumulator.y = 0;
-
-		super.velocity.add(acceleration);
-		super.velocity.mult(DAMPING);
+		super.integrate();
 	}
 
 	void explode() {
@@ -49,8 +37,6 @@ class Bomb extends Particle {
 		explosions.add(new Explosion(new PVector(super.position.x, super.position.y), 8, 100));
 		// Signal for Delete Self
 		exploded = true;
-		// Move Offscreen
-		super.position.set(-100, -100); // Offscreen
 	}
 
 	void draw() {

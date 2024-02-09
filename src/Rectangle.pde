@@ -1,5 +1,5 @@
-// Collidable.pde
-interface Collidable {
+// Rectangle.pde
+interface Rectangle extends Collidable {
 	boolean collidesWith(Collidable other);
 	void handleCollision(Collidable other);
 }

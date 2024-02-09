@@ -28,16 +28,7 @@ class Meteor extends Particle {
 		if (exploded) {
 			return;
 		}
-		// Physics
-		super.position.add(super.velocity);
-		// System.out.println("invMass:" + super.invMass);// Print
-		PVector acceleration = super.forceAccumulator.get();
-		acceleration.mult(super.invMass);
-		super.forceAccumulator.x = 0;
-		super.forceAccumulator.y = 0;
-		// System.out.println("Accel:" + acceleration);// Print
-		super.velocity.add(acceleration);
-		super.velocity.mult(DAMPING);
+		super.integrate();
     }
 
     void explode() {
@@ -48,8 +39,6 @@ class Meteor extends Particle {
         explosions.add(new Explosion(new PVector(super.position.x, super.position.y), 8, 100));
         // Signal for Delete Self
         exploded = true;
-        // Move Offscreen
-        super.position.set(-200, -100); // Offscreen
     }
 
     void draw() {

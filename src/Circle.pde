@@ -1,5 +1,5 @@
-// Collidable.pde
-interface Collidable {
+// Circle.pde
+interface Circle extends Collidable {
 	boolean collidesWith(Collidable other);
 	void handleCollision(Collidable other);
 }
