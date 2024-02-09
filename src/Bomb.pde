@@ -5,7 +5,7 @@ class Bomb extends Particle {
 
 	// Constructor
 	Bomb(float x, float y, float xV, float yV, ArrayList<Explosion> explosions) {
-		super(x, y, xV, yV, 1f); // Assuming the mass of the bomb is 1
+		super(x, y, xV, yV, 1f); // The mass of the bomb is 1
 		this.explosions = explosions;
 		this.exploded = false;
 	}
@@ -13,12 +13,6 @@ class Bomb extends Particle {
 	@Override
 	public float getMass() {
 		return 1f; // Mass of the bomb is 1
-	}
-
-	@Override
-	void addForce(PVector force) {
-		super.forceAccumulator.add(force);
-		// System.out.println(force);
 	}
 
 	@Override

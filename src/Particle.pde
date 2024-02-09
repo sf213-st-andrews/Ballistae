@@ -15,7 +15,9 @@ abstract class Particle {
 		this.invMass = invM;
 	}
 
-	public abstract float getMass();
+	public float getMass() {
+		return 1f/invMass;
+	}
 
 	void addForce(PVector force) {
 		this.forceAccumulator.add(force);

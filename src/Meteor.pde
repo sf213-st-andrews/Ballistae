@@ -12,17 +12,6 @@ class Meteor extends Particle {
         this.explosions = explosions;
     }
 
-	@Override
-	public float getMass() {
-		return 1f/super.invMass;
-	}
-
-	@Override
-	void addForce(PVector force) {
-		super.forceAccumulator.add(force);
-		// System.out.println(force);
-	}
-
     @Override
     void integrate() {
 		if (exploded) {
