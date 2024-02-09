@@ -29,7 +29,7 @@ class Bomb extends Particle {
 
 		// Physics
 		super.integrate();
-		velocity.mult(BOMB_DAMPING);
+		super.velocity.mult(BOMB_DAMPING);
 	}
 
 	void explode() {
@@ -37,20 +37,22 @@ class Bomb extends Particle {
 			return;
 		}
 		// Add Explosion to referenced Array
-		explosions.add(new Explosion(new PVector(position.x, position.y), 8, 100));
+		explosions.add(new Explosion(new PVector(super.position.x, super.position.y), 8, 100));
 		// Signal for Delete Self
 		exploded = true;
 		// Move Offscreen
-		position.set(-100, -100); // Offscreen
+		super.position.set(-100, -100); // Offscreen
 	}
 
 	void draw() {
 		if (exploded) {
 			return;
 		}
+		// Physics
+		
 
 		// Graphics
 		fill(0, 0, 0);
-		ellipse(position.x, position.y, 20, 20);
+		ellipse(super.position.x, super.position.y, 20, 20);
 	}
 }

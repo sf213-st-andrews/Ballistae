@@ -52,7 +52,7 @@ void setup() {
 void mousePressed() {
 	if (mouseButton == LEFT) {
 		for (int i = 0; i < ballistae.length; i++) {
-			ballistae[i].fireBomb(new PVector(mouseX, mouseY));
+			ballistae[i].fireBomb();
 		}
 	} else {
 		for (int i = 0; i < bombs.size(); i++) {
@@ -64,13 +64,13 @@ void mousePressed() {
 void keyPressed() {
 	// Not using Switch Statement b/c two buttons can be pressed at once
 	if (key == '1') {
-		ballistae[0].fireBomb(new PVector(mouseX, mouseY));
+		ballistae[0].fireBomb();
 	}
 	if (key == '2') {
-		ballistae[1].fireBomb(new PVector(mouseX, mouseY));
+		ballistae[1].fireBomb();
 	}
 	if (key == '3') {
-		ballistae[2].fireBomb(new PVector(mouseX, mouseY));
+		ballistae[2].fireBomb();
 	}
 	if (key == ' ') {
 		for (int i = 0; i < bombs.size(); i++) {

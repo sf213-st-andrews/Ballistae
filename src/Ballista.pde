@@ -20,8 +20,8 @@ class Ballista {
 	}
 
 	// Fire a bomb towards the mouse position. Do I need to even pass the mouse position?
-	void fireBomb(PVector mousePos) {
-		bombs.add(new Bomb(new PVector(pos.x, bowstringY), PVector.sub(mousePos, pos).mult(magReduce), explosions));
+	void fireBomb() {//PVector.sub(mousePos, pos).mult(magReduce)
+		bombs.add(new Bomb(pos.x, bowstringY, (mouseX - pos.x) * magReduce, (mouseY - pos.y) * magReduce, explosions));
 	}
 
 	// Draw

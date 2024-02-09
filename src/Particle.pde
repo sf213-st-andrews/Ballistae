@@ -18,5 +18,10 @@ abstract class Particle {
 
 	abstract void addForce(PVector force);
 
-	abstract void integrate();
+	abstract void integrate() {
+		position.add(velocity);
+		PVector acceleration = forceAccumulator.mult(invMass);
+		velocity.add(acceleration);
+		forceAccumulator.set(0, 0);
+	}
 }
