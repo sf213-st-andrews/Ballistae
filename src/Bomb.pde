@@ -18,7 +18,7 @@ class Bomb extends Particle {
 
 	@Override
 	void addForce(PVector force) {
-		// Bombs don't respond to forces in this example
+		super.forceAccumulator.add(force);
 	}
 
 	@Override
@@ -28,8 +28,10 @@ class Bomb extends Particle {
 		}
 
 		// Physics
-		super.integrate();
+		super.position.add(super.velocity);
+		super.velocity.add(super.forceAccumulator.mult(super.invMass));
 		super.velocity.mult(BOMB_DAMPING);
+		super.forceAccumulator.set(0, 0);
 	}
 
 	void explode() {
@@ -49,7 +51,7 @@ class Bomb extends Particle {
 			return;
 		}
 		// Physics
-		
+		integrate();
 
 		// Graphics
 		fill(0, 0, 0);

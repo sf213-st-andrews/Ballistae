@@ -7,6 +7,10 @@ final int ground_height_half	= ground_height/2;
 
 // Physics
 public static final float GRAVITY = 0.2f;
+Gravity gravity = new Gravity(new Gravity(new PVector(0f, 0.2f)));
+
+// Registry
+
 
 // Objects
 City cities[];
@@ -73,9 +77,7 @@ void keyPressed() {
 		ballistae[2].fireBomb();
 	}
 	if (key == ' ') {
-		for (int i = 0; i < bombs.size(); i++) {
-			bombs.get(i).explode();
-		}
+		if (bombs.size() > 0) {bombs.get(bombs.size() - 1).explode();}
 	}
 }
 
