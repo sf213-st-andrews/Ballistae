@@ -14,7 +14,9 @@ Gravity gravity	= new Gravity(new Gravity(new PVector(0f, 0.2f)));
 ForceRegistry forceRegistry;
 
 // Objects
+int nCities = 6;
 City cities[];
+int nBallis = 3;
 Ballista ballistae[];
 ArrayList<Bomb> bombs;			// Pool of ammunition
 ArrayList<Explosion> explosions;// Pool of explosions
@@ -33,17 +35,17 @@ void setup() {
 	bombs = new ArrayList<Bomb>();
 	explosions = new ArrayList<Explosion>();
 	// Cities
-	cities = new City[6];
-	int cSect	= screen_width / cities.length; // Divide into sections
+	cities = new City[nCities];
+	int cSect	= screen_width / nCities; // Divide into sections
 	int cSect_h	= cSect / 2;       				// For Offset to make the sections neat
-	for (int i = 0; i < cities.length; i++) {
+	for (int i = 0; i < nCities; i++) {
 		cities[i] = new City((cSect * i) + cSect_h, screen_height - 20);
 	}
 	// Ballistae
 	ballistae = new Ballista[3];
-	int bSect	= screen_width / ballistae.length; // Divide into sections
+	int bSect	= screen_width / nBallis; // Divide into sections
 	int bSect_h	= bSect / 2;       				// For Offset to make the sections neat
-	for(int i = 0; i < ballistae.length; i++) {
+	for(int i = 0; i < nBallis; i++) {
 		ballistae[i] = new Ballista((bSect * i) + bSect_h, screen_height - 70, bombs, explosions);
 	}
 	
@@ -56,7 +58,7 @@ void setup() {
 
 void mousePressed() {
 	if (mouseButton == LEFT) {
-		for (int i = 0; i < ballistae.length; i++) {
+		for (int i = 0; i < nBallis; i++) {
 			ballistae[i].fireBomb();
 		}
 	} else {
@@ -89,11 +91,11 @@ void draw() {
 	fill(24, 56, 1);
 	rect(screen_width_half, screen_height - ground_height_half, screen_width, ground_height);
 	// Cities
-	for (int i = 0; i < cities.length; i++) {
+	for (int i = 0; i < nCities; i++) {
 		cities[i].draw();
 	}
 	// Ballistae
-	for (int i = 0; i < ballistae.length; i++) {
+	for (int i = 0; i < nBallis; i++) {
 		ballistae[i].draw();
 	}
 	// Meteors
