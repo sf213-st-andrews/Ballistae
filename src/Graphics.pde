@@ -1,0 +1,5 @@
+// Graphics.pde
+
+class Graphics {
+
+}
