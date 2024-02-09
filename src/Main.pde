@@ -7,10 +7,11 @@ final int ground_height_half	= ground_height/2;
 
 // Physics
 public static final float GRAVITY = 0.2f;
-Gravity gravity = new Gravity(new Gravity(new PVector(0f, 0.2f)));
+Gravity gravity	= new Gravity(new Gravity(new PVector(0f, 0.2f)));
+// Drag drag		= new Drag(10, 10);
 
 // Registry
-
+ForceRegistry forceRegistry;
 
 // Objects
 City cities[];
