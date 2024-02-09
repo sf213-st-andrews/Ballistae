@@ -6,21 +6,24 @@ final int ground_height			= 80;
 final int ground_height_half	= ground_height/2;
 
 // Physics
-public static final float GRAVITY = 0.2f;
-Gravity gravity	= new Gravity(new Gravity(new PVector(0f, 0.2f)));
-// Drag drag		= new Drag(10, 10);
+public static final float DAMPING = 0.995;
+Gravity gravity	= new Gravity(new PVector(0f, 0.2f));// 0.2f
+Drag drag		= new Drag(0.001f, 0.001f);
 
 // Registry
-ForceRegistry forceRegistry;
+// ForceRegistry forceRegistry;
 
 // Objects
+// City
 int nCities = 6;
 City cities[];
+// Ballista
 int nBallis = 3;
 Ballista ballistae[];
+// ArrayLists
 ArrayList<Bomb> bombs;			// Pool of ammunition
 ArrayList<Explosion> explosions;// Pool of explosions
-Meteor meteors[];
+ArrayList<Meteor> meteors;		// Pool of meteors
 
 // int score = 0;
 
@@ -32,8 +35,9 @@ void setup() {
 	// Graphics
 	rectMode(CENTER);
 	// ArrayList initialization
-	bombs = new ArrayList<Bomb>();
-	explosions = new ArrayList<Explosion>();
+	bombs		= new ArrayList<Bomb>();
+	explosions	= new ArrayList<Explosion>();
+	meteors		= new ArrayList<Meteor>();
 	// Cities
 	cities = new City[nCities];
 	int cSect	= screen_width / nCities; // Divide into sections
@@ -42,7 +46,7 @@ void setup() {
 		cities[i] = new City((cSect * i) + cSect_h, screen_height - 20);
 	}
 	// Ballistae
-	ballistae = new Ballista[3];
+	ballistae = new Ballista[nBallis];
 	int bSect	= screen_width / nBallis; // Divide into sections
 	int bSect_h	= bSect / 2;       				// For Offset to make the sections neat
 	for(int i = 0; i < nBallis; i++) {
@@ -50,9 +54,19 @@ void setup() {
 	}
 	
 	// Meteors
-	meteors = new Meteor[4];
-	for (int i = 0; i < 4; i++) {
-		meteors[i] = new Meteor(new PVector((screen_width / 4) * i + 15, 0), new PVector((float) random( -10, 10),(float) random(0, 20)),(int) random(20, 50), explosions);
+	spawnWave(6);
+
+	// Force Registry
+	// forceRegistry = new ForceRegistry();
+}
+
+void spawnWave(int waveSize) {
+	int wSect	= screen_width / waveSize;
+	int wSect_h	= wSect / 2;
+	for (int i = 0; i < waveSize; i++) {
+		meteors.add(new Meteor(wSect * i + (float)random(0, wSect_h), -50f, 
+		(float)random(-5, 5), (float)random(-10, 20), 
+		(int) random(20, 50), explosions));
 	}
 }
 
@@ -80,7 +94,7 @@ void keyPressed() {
 		ballistae[2].fireBomb();
 	}
 	if (key == ' ') {
-		if (bombs.size() > 0) {bombs.get(bombs.size() - 1).explode();}
+		if (bombs.size() > 0) {bombs.get(0).explode();}
 	}
 }
 
@@ -99,16 +113,26 @@ void draw() {
 		ballistae[i].draw();
 	}
 	// Meteors
-	for (int i = 0; i < meteors.length; i++) {
-		meteors[i].draw();
+	for (int i = meteors.size() - 1; i >= 0; i--) {
+		// Start from last to first so removing isn't a problem
+		if (meteors.get(i).exploded) {
+			meteors.remove(i);
+			continue;
+		}
+		gravity.updateForce(meteors.get(i));
+		drag.updateForce(meteors.get(i));
+		meteors.get(i).draw();
 	}
 	// Bombs
 	for (int i = bombs.size() - 1; i >= 0; i--) {
 		// Start from last to first so removing isn't a problem
-		bombs.get(i).draw();
 		if (bombs.get(i).exploded) {
 			bombs.remove(i);
+			continue;
 		}
+		gravity.updateForce(bombs.get(i));
+		drag.updateForce(bombs.get(i));
+		bombs.get(i).draw();
 	}
 	// Explosions
 	for (int i = explosions.size() - 1; i >= 0; i--) {

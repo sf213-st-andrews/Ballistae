@@ -12,6 +12,7 @@ abstract class Particle {
 		}
 		this.velocity = new PVector(xV, yV);
 		this.forceAccumulator = new PVector(0, 0);
+		this.invMass = invM;
 	}
 
 	public abstract float getMass();

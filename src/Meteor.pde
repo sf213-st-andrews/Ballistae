@@ -1,47 +1,63 @@
-// Meteor.pde implements Collidable
+// Meteor.pde  implements Collidable
+class Meteor extends Particle {
+    int radius;
+    boolean exploded;
+    private ArrayList<Explosion> explosions;
 
-// Damping or Actual Drag?
-private static final float METEOR_DAMPING = .95f;
-
-class Meteor {
-	PVector position;
-	PVector velocity;
-	PVector acceleration;
-	int radius;
-	// float invMass;
-	boolean exploded;
-	private ArrayList<Explosion> explosions;
-
-	// Constructor
-	Meteor(PVector pos, PVector vel, int radius, ArrayList<Explosion> explosions) {
-		this.position		= pos;
-		this.velocity		= vel;
-		this.acceleration	= new PVector(0, GRAVITY);
-		this.radius			= radius;
-		this.exploded		= false;
-		this.explosions		= explosions;
-	}
-
-	void update() {
-		position.add(velocity);
-		velocity.add(acceleration);
-		velocity.mult(METEOR_DAMPING);
-	}
-
-	void explode() {
-        if (exploded) {return;}
-		// Add Explosion to referenced Array
-        explosions.add(new Explosion(new PVector(position.x, position.y), 8, 100));
-        // Signal for Delete Self
-		exploded = true;
-		// Move Offscreen
-        position.set(-200, -100);// Offscreen
+    // Constructor
+    Meteor(float x, float y, float xV, float yV, int radius, ArrayList<Explosion> explosions) {
+        super(x, y, xV, yV, (float)(radius*radius/16));// Mass increases exponentially(?) with radius.
+        this.radius = radius;
+        this.exploded = false;
+        this.explosions = explosions;
     }
 
-	void draw() {
-		update();
-
-		fill(169, 169, 169); // Temp Dark Grey
-		ellipse(this.position.x, this.position.y, radius, radius);
+	@Override
+	public float getMass() {
+		return 1f/super.invMass;
 	}
+
+	@Override
+	void addForce(PVector force) {
+		super.forceAccumulator.add(force);
+		// System.out.println(force);
+	}
+
+    @Override
+    void integrate() {
+		if (exploded) {
+			return;
+		}
+		// Physics
+		super.position.add(super.velocity);
+		// System.out.println("invMass:" + super.invMass);// Print
+		PVector acceleration = super.forceAccumulator.get();
+		acceleration.mult(super.invMass);
+		super.forceAccumulator.x = 0;
+		super.forceAccumulator.y = 0;
+		// System.out.println("Accel:" + acceleration);// Print
+		super.velocity.add(acceleration);
+		super.velocity.mult(DAMPING);
+    }
+
+    void explode() {
+        if (exploded) {
+            return;
+        }
+        // Add Explosion to referenced Array
+        explosions.add(new Explosion(new PVector(super.position.x, super.position.y), 8, 100));
+        // Signal for Delete Self
+        exploded = true;
+        // Move Offscreen
+        super.position.set(-200, -100); // Offscreen
+    }
+
+    void draw() {
+		// Physics
+		integrate();
+
+		// Graphics
+        fill(169, 169, 169); // Temp Dark Grey
+        ellipse(super.position.x, super.position.y, radius, radius);
+    }
 }

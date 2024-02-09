@@ -1,8 +1,9 @@
 // Ballista.pde
 class Ballista {
 	// Graphics
-	private static final float ballistaWidth = 40;
-	private static final float ballistaHeight = 50;
+	private static final float ballistaWidth	= 40;
+	private static final float ballistaHeight	= 50;
+	private static final float aimLength		= 200;
 	float bowstringY;
 
 	// Attributes
@@ -26,8 +27,12 @@ class Ballista {
 
 	// Draw
 	void draw() {
-		// Draw bowstring
-		line(pos.x, bowstringY, mouseX, mouseY);
+		// Calculate the direction from the ballista position to the mouse position
+		PVector direction = new PVector(mouseX - pos.x, mouseY - bowstringY);
+		direction.normalize();
+		stroke(255, 0, 0);
+		line(pos.x, bowstringY, pos.x + direction.x * aimLength, bowstringY + direction.y * aimLength);
+		stroke(0, 0, 0);
 
 		// Draw ballista
 		fill(165, 42, 42);

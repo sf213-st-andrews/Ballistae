@@ -1,24 +1,24 @@
 // Bomb.pde
 class Bomb extends Particle {
-	private static final float BOMB_DAMPING = 0.996f;
 	private ArrayList<Explosion> explosions;
 	private boolean exploded;
 
 	// Constructor
 	Bomb(float x, float y, float xV, float yV, ArrayList<Explosion> explosions) {
-		super(x, y, xV, yV, 1); // Assuming the mass of the bomb is 1
+		super(x, y, xV, yV, 1f); // Assuming the mass of the bomb is 1
 		this.explosions = explosions;
 		this.exploded = false;
 	}
 
 	@Override
 	public float getMass() {
-		return 1; // Mass of the bomb is 1
+		return 1f; // Mass of the bomb is 1
 	}
 
 	@Override
 	void addForce(PVector force) {
 		super.forceAccumulator.add(force);
+		// System.out.println(force);
 	}
 
 	@Override
@@ -29,9 +29,16 @@ class Bomb extends Particle {
 
 		// Physics
 		super.position.add(super.velocity);
-		super.velocity.add(super.forceAccumulator.mult(super.invMass));
-		super.velocity.mult(BOMB_DAMPING);
-		super.forceAccumulator.set(0, 0);
+
+		PVector acceleration = super.forceAccumulator.get();
+		// System.out.println(super.invMass);// Print
+		acceleration.mult(super.invMass);
+		// System.out.println(acceleration);// Print
+		super.forceAccumulator.x = 0;
+		super.forceAccumulator.y = 0;
+
+		super.velocity.add(acceleration);
+		super.velocity.mult(DAMPING);
 	}
 
 	void explode() {
