@@ -1,5 +1,0 @@
-// Graphics.pde
-
-class Graphics {
-
-}
