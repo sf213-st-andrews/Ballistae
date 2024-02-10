@@ -6,7 +6,7 @@ class Meteor extends Particle implements Circle {
 
     // Constructor
     Meteor(float x, float y, float xV, float yV, int radius, ArrayList<Explosion> explosions) {
-        super(x, y, xV, yV, 16f / (float)(radius*radius));// Mass increases exponentially(?) with radius.
+        super(x, y, xV, yV, 1f / (float)(radius*radius));// Mass increases exponentially(?) with radius.
         this.radius = radius;
         this.exploded = false;
         this.explosions = explosions;

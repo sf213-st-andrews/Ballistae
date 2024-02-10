@@ -1,6 +1,8 @@
 // Bomb.pde
 
-private static int bRadius = 20;// Make sure Graphics draw it correctly
+private static int bRadius		= 20;// Make sure Graphics draw it correctly
+private static float bInvMass	= 0.015625f;
+private static float bMass		= 64f;
 
 class Bomb extends Particle implements Circle {
 	// Explosions
@@ -9,14 +11,14 @@ class Bomb extends Particle implements Circle {
 
 	// Constructor
 	Bomb(float x, float y, float xV, float yV, ArrayList<Explosion> explosions) {
-		super(x, y, xV, yV, 1f); // The mass of the bomb is 1
+		super(x, y, xV, yV, bInvMass);
 		this.explosions = explosions;
 		this.exploded = false;
 	}
 
 	@Override
 	public float getMass() {
-		return 1f; // Mass of the bomb is 1
+		return bMass;
 	}
 
 	@Override

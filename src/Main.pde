@@ -8,7 +8,7 @@ final int ground_height_half	= ground_height/2;
 // Physics
 public static final float DAMPING = 0.995;
 Gravity gravity	= new Gravity(new PVector(0f, 0.2f));// 0.2f
-Drag drag		= new Drag(0.001f, 0.001f);// Currently Drag does NOT depend on the size/surface area of the particle
+Drag drag		= new Drag(0.001f, 0.1f);// Currently Drag does NOT depend on the size/surface area of the particle
 
 // Registry
 // ForceRegistry forceRegistry;
@@ -18,7 +18,7 @@ Drag drag		= new Drag(0.001f, 0.001f);// Currently Drag does NOT depend on the s
 int nCities = 6;
 City cities[];
 // Ballista
-int nBallis = 3;
+int nBallis = 6;
 Ballista ballistae[];
 // ArrayLists
 ArrayList<Bomb> bombs;			// Pool of ammunition
@@ -33,7 +33,6 @@ void settings() {
 
 void setup() {
 	// Graphics
-	rectMode(CENTER);
 	// ArrayList initialization
 	bombs		= new ArrayList<Bomb>();
 	explosions	= new ArrayList<Explosion>();
@@ -41,20 +40,23 @@ void setup() {
 	// Cities
 	cities = new City[nCities];
 	int cSect	= screen_width / nCities; // Divide into sections
-	int cSect_h	= cSect / 2;       				// For Offset to make the sections neat
+	int cSect_q	= cSect / 4;       				// For Offset to make the sections neat
 	for (int i = 0; i < nCities; i++) {
-		cities[i] = new City((cSect * i) + cSect_h, screen_height - 20);
+		cities[i] = new City((cSect * i) + cSect_q, screen_height - 40);
 	}
 	// Ballistae
 	ballistae = new Ballista[nBallis];
 	int bSect	= screen_width / nBallis; // Divide into sections
-	int bSect_h	= bSect / 2;       				// For Offset to make the sections neat
+	int bSect_q	= bSect / 4;       				// For Offset to make the sections neat
 	for(int i = 0; i < nBallis; i++) {
-		ballistae[i] = new Ballista((bSect * i) + bSect_h, screen_height - 70, bombs, explosions);
+		ballistae[i] = new Ballista((bSect * i) + bSect_q, screen_height - 100, bombs, explosions);
 	}
 	
 	// Meteors
-	spawnWave(6);
+	// spawnWave(6);
+	meteors.add(new Meteor(250, 450, 
+		0, 0, 
+		50, explosions));
 }
 
 void spawnWave(int waveSize) {
@@ -93,6 +95,10 @@ void keyPressed() {
 	if (key == ' ') {
 		if (bombs.size() > 0) {bombs.get(0).explode();}
 	}
+	// For Debugging
+	if (key == 'm') {
+		spawnWave(12);
+	}
 }
 
 void draw() {
@@ -100,9 +106,17 @@ void draw() {
 	background(47, 150, 173);// Sky Color: 47, 150, 173
 	// Ground
 	fill(24, 56, 1);
-	rect(screen_width_half, screen_height - ground_height_half, screen_width, ground_height);
+	rect(0, screen_height - ground_height, screen_width, ground_height);
 	// Cities
 	for (int i = 0; i < nCities; i++) {
+		// save meteors.size() - 1 as a variable ealier?
+		for (int j = meteors.size() - 1; j >= 0; j--) {
+			Meteor meteor = meteors.get(j);// For Readablity
+
+			if (cities[i].collidesWithCircle(meteor)) {
+				cities[i].intact = false;
+			}
+		}
 		cities[i].draw();
 	}
 	// Ballistae
@@ -145,8 +159,10 @@ void draw() {
 		explosions.get(i).draw();
 		if (explosions.get(i).lifetime <= 0) {
 			explosions.remove(i);
+			continue;
 		}
 	}
 	
 	// System.out.println("Bombs size: " + bombs.size());
+	// System.out.println("Explosions size: " + explosions.size());
 }

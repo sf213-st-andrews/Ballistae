@@ -7,12 +7,12 @@ abstract class Particle {
 
 	Particle(float x, float y, float xV, float yV, float invM) {
 		this.position = new PVector(x, y);
+		this.invMass = invM;
 		if (invM == 0f) {
 			return;
 		}
 		this.velocity = new PVector(xV, yV);
 		this.forceAccumulator = new PVector(0, 0);
-		this.invMass = invM;
 	}
 
 	public float getMass() {
@@ -24,6 +24,7 @@ abstract class Particle {
 	}
 
 	void integrate() {
+		// Add an if invMass = 0 check?
 		position.add(velocity);
 
 		PVector acceleration = forceAccumulator.get();// System.out.println(super.invMass);// Print
