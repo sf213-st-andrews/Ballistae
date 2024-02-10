@@ -5,7 +5,7 @@ final int ground_height			= 80;
 
 // Physics
 public static final float DAMPING = 0.995;
-Gravity gravity	= new Gravity(new PVector(0f, 0.2f));// 0.2f
+Gravity gravity	= new Gravity(new PVector(0f, 0.0f));// 0.2f
 Drag drag		= new Drag(0.001f, 0.1f);// Currently Drag does NOT depend on the size/surface area of the particle
 
 // Objects
@@ -124,12 +124,6 @@ void draw() {
 		// Start from last to first so removing isn't a problem
 		Meteor meteor = meteors.get(i);// For Readablity
 
-		// for (int j = bombs.size() - 1; j >= 0; j--) {
-		// 	if (meteor.collidesWithCircle(bombs.get(j))) {
-		// 		meteor.handleCollisionCirlce(bombs.get(j));
-		// 		break;// To break out of the for-loop
-		// 	}
-		// }
 		if (meteor.exploded || meteor.position.y > screen_height + 100) {
 			meteors.remove(i);
 			continue;
@@ -173,7 +167,6 @@ void draw() {
 			continue;
 		}
 		for (int j = circles.size() - 1; j >= 0; j--) {
-			System.out.println(circles.get(j));
 			if (explosion.collidesWithCircle(circles.get(j))) {
 				explosion.handleCollisionCirlce(circles.get(j));
 			}

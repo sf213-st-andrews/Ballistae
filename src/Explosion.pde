@@ -2,21 +2,21 @@
 // Is this a Particle? No
 class Explosion implements Circle {
 	PVector position;
-	int maxRadius;	// The Maximum Radius
-	int radius;		// The Current Radius
-	int lifetime;	// How long the explosion stays before it self-deletes
-	int halfLife;	// Half of the lifetime.
+	int maxHalfRadius;	// The Maximum Half Radius
+	int halfRadius;		// The Current Radius/2
+	int lifetime;		// How long the explosion stays before it self-deletes
+	int halfLife;		// Half of the lifetime.
 
 	// Constructor
-	Explosion(float x, float y, int halfLife, int maxRadius) {
-		this.position = new PVector(x, y); // Create a new PVector to avoid reference issues
-		this.halfLife = halfLife;
-		this.lifetime = halfLife*2;
-		this.maxRadius = maxRadius;
+	Explosion(float x, float y, int halfLife, int maxHalfRadius) {
+		this.position		= new PVector(x, y); // Create a new PVector to avoid reference issues
+		this.halfLife		= halfLife;
+		this.lifetime		= halfLife*2;
+		this.maxHalfRadius	= maxHalfRadius;
 	}
 
 	int getRadius() {
-		return radius;//Maybe Radius*2?
+		return halfRadius*2;//Maybe Radius*2?
 	}
 
 	boolean collidesWith(Collidable other) {
@@ -25,18 +25,15 @@ class Explosion implements Circle {
 	}
 	boolean collidesWithCircle(Circle otherCirlce) {
 		if (otherCirlce instanceof Particle) {
-			// Is this check necessary?
-			int sumRadius = bRadius + otherCirlce.getRadius();
+			int sumRadius = this.getRadius() + otherCirlce.getRadius();
 			Particle otherParticle = (Particle) otherCirlce;
 			float distance = position.dist(otherParticle.position);
-			// System.out.println("CDist: " + distance);
 			return (distance < sumRadius);
 		}
-		System.out.println("ECWC Error: Not a Particle");// Remove?
+		System.out.println("ECWC Error: Not a Particle");
 		return false;
 	}
 	boolean collidesWithRectangle(Rectangle otherRectangle) {
-		// Explode on City?
 		if (otherRectangle instanceof Particle) {
 			PVector rectArea		= otherRectangle.getArea();
 			Particle otherParticle	= (Particle) otherRectangle;
@@ -46,9 +43,9 @@ class Explosion implements Circle {
 			float closestY = constrain(position.y, otherPosition.y, otherPosition.y + rectArea.y);
 			float distance = dist(position.x, position.y, closestX, closestY);
 
-			return (distance < bRadius);
+			return (distance < this.getRadius());
 		}
-		System.out.println("ECWR Error: Not a Particle");// Remove?
+		System.out.println("ECWR Error: Not a Particle");
 		return false;
 	}
 
@@ -60,26 +57,22 @@ class Explosion implements Circle {
 			handleCollisionRectangle((Rectangle) other);
 			return;
 		}
-		// return;
 	}
 	void handleCollisionCirlce(Circle otherCirlce) {
 		if (otherCirlce instanceof Explodable) {
 			Explodable explodable = (Explodable) (otherCirlce);
 			explodable.explode();
 		}
-		// registerHit()?
-		// TODO finish
 		return;
 	}
 	void handleCollisionRectangle(Rectangle otherRectangle) {
-		// registerHit()?
 		// TODO finish
 		return;
 	}
 
 	void update() {
 		if (lifetime <= 0) {return;}
-		radius = maxRadius - ((halfLife - lifetime)*(halfLife - lifetime));
+		halfRadius = maxHalfRadius - ((halfLife - lifetime)*(halfLife - lifetime));
 		lifetime -= 1;
 	}
 
@@ -88,10 +81,10 @@ class Explosion implements Circle {
 		update();
 
 		fill(235, 82, 52); // Orange. *2 because of how ellipse draws. Add Offset?
-		ellipse(position.x, position.y, radius*2, radius*2);// Not sure if Radius*2 is wise
+		ellipse(position.x, position.y, this.getRadius(), this.getRadius());
 
 		// Explosion has a yellow heart
 		fill(235, 210, 52); // Yellow
-		ellipse(position.x, position.y, radius, radius);
+		ellipse(position.x, position.y, halfRadius, halfRadius);
 	}
 }
