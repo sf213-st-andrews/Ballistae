@@ -55,7 +55,7 @@ class Ballista extends Particle implements Rectangle {
 		return false;
 	}
 	boolean collidesWithRectangle(Rectangle otherRectangle) {
-		// Ballista will never collide with another ballista
+		// Ballista will never collide with another ballista or city
 		return false;
 	}
 
@@ -75,12 +75,12 @@ class Ballista extends Particle implements Rectangle {
 		stroke(255, 100, 100);
 		strokeWeight(4);
 		line(super.position.x + halfRadius, super.position.y,
-		super.position.x + halfRadius + direction.x * aimLength, super.position.y + direction.y * aimLength);
+		super.position.x + direction.x * aimLength, super.position.y + direction.y * aimLength);
 
 		stroke(255, 255, 255);
 		strokeWeight(1);
 		line(super.position.x + halfRadius, super.position.y,
-		super.position.x + halfRadius + direction.x * aimLength, super.position.y + direction.y * aimLength);
+		super.position.x + direction.x * aimLength, super.position.y + direction.y * aimLength);
 		
 		// Reset stroke
 		stroke(0, 0, 0);

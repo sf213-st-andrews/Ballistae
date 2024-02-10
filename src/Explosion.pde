@@ -2,21 +2,21 @@
 // Is this a Particle? No
 class Explosion implements Circle {
 	PVector position;
-	int maxHalfRadius;	// The Maximum Half Radius
-	int halfRadius;		// The Current Radius/2
-	int lifetime;		// How long the explosion stays before it self-deletes
-	int halfLife;		// Half of the lifetime.
+	int maxRadius;	// The Maximum Radius
+	int radius;		// The Current Radius
+	int lifetime;	// How long the explosion stays before it self-deletes
+	int halfLife;	// Half of the lifetime.
 
 	// Constructor
-	Explosion(float x, float y, int halfLife, int maxHalfRadius) {
-		this.position		= new PVector(x, y); // Create a new PVector to avoid reference issues
-		this.halfLife		= halfLife;
-		this.lifetime		= halfLife*2;
-		this.maxHalfRadius	= maxHalfRadius;
+	Explosion(float x, float y, int halfLife, int maxRadius) {
+		this.position = new PVector(x, y); // Create a new PVector to avoid reference issues
+		this.halfLife = halfLife;
+		this.lifetime = halfLife*2;
+		this.maxRadius = maxRadius;
 	}
 
 	int getRadius() {
-		return halfRadius*2;//Maybe Radius*2?
+		return radius;
 	}
 
 	boolean collidesWith(Collidable other) {
@@ -25,7 +25,7 @@ class Explosion implements Circle {
 	}
 	boolean collidesWithCircle(Circle otherCirlce) {
 		if (otherCirlce instanceof Particle) {
-			int sumRadius = this.getRadius() + otherCirlce.getRadius();
+			int sumRadius = radius + otherCirlce.getRadius();
 			Particle otherParticle = (Particle) otherCirlce;
 			float distance = position.dist(otherParticle.position);
 			return (distance < sumRadius);
@@ -43,7 +43,7 @@ class Explosion implements Circle {
 			float closestY = constrain(position.y, otherPosition.y, otherPosition.y + rectArea.y);
 			float distance = dist(position.x, position.y, closestX, closestY);
 
-			return (distance < this.getRadius());
+			return (distance < radius);
 		}
 		System.out.println("ECWR Error: Not a Particle");
 		return false;
@@ -72,7 +72,7 @@ class Explosion implements Circle {
 
 	void update() {
 		if (lifetime <= 0) {return;}
-		halfRadius = maxHalfRadius - ((halfLife - lifetime)*(halfLife - lifetime));
+		radius = maxRadius - ((halfLife - lifetime)*(halfLife - lifetime));
 		lifetime -= 1;
 	}
 
@@ -81,10 +81,10 @@ class Explosion implements Circle {
 		update();
 
 		fill(235, 82, 52); // Orange. *2 because of how ellipse draws. Add Offset?
-		ellipse(position.x, position.y, this.getRadius(), this.getRadius());
+		ellipse(position.x, position.y, radius*2, radius*2);// Not sure if Radius*2 is wise
 
 		// Explosion has a yellow heart
 		fill(235, 210, 52); // Yellow
-		ellipse(position.x, position.y, halfRadius, halfRadius);
+		ellipse(position.x, position.y, radius, radius);
 	}
 }
