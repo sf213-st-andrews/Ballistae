@@ -1,7 +1,9 @@
 // Graphics
-final int screen_width			= 1200;
-final int screen_height			= 900;
-final int ground_height			= 80;
+static final int screen_width		= 1200;
+static final int screen_width_h		= screen_width/2;
+static final int screen_height		= 900;
+static final int screen_height_h	= screen_height/2;
+static final int ground_height		= 80;
 
 // Physics
 public static final float DAMPING = 0.995;
@@ -20,14 +22,21 @@ ArrayList<Bomb> bombs;			// Pool of ammunition
 ArrayList<Explosion> explosions;// Pool of explosions
 ArrayList<Meteor> meteors;		// Pool of meteors
 
+// GUI and User Input
+static final int numKeys = 5;
 // int score = 0;
-int gameState = 0;// 0 Start Menu, 1 Gameplay
+int gameState		= 0;// 0 Start Menu, 1 Gameplay
+
+boolean keyLog[]	= new boolean[numKeys];// 6 Keys
 
 void settings() {
 	size(screen_width, screen_height);
 }
 
 void setup() {
+	for (int i = 0; i < numKeys; i++) {
+		keyLog[i] = false;// Set all keys to not pressed
+	}
 	setupGame();
 }
 
@@ -86,23 +95,43 @@ void mousePressed() {
 void keyPressed() {
 	// Not using Switch Statement b/c two buttons can be pressed at once
 	if (key == '1') {
-		ballistae[0].fireBomb();
+		keyLog[0] = true;
 	}
 	if (key == '2') {
-		ballistae[1].fireBomb();
+		keyLog[1] = true;
 	}
 	if (key == '3') {
-		ballistae[2].fireBomb();
+		keyLog[2] = true;
 	}
 	if (key == ' ') {
-		if (bombs.size() > 0) {bombs.get(0).explode();}
+		keyLog[3] = true;
 	}
 	// For Debugging
 	if (key == 'm') {
-		spawnWave(12);
+		keyLog[4] = true;
 	}
 	if (key == ENTER) {
+		// Maybe don't need a keyLog for this
 		gameState = (gameState+1) % 2;
+	}
+}
+
+void keyReleased() {
+	if (key == '1') {
+		keyLog[0] = false;
+	}
+	if (key == '2') {
+		keyLog[1] = false;
+	}
+	if (key == '3') {
+		keyLog[2] = false;
+	}
+	if (key == ' ') {
+		keyLog[3] = false;
+	}
+	// For Debugging
+	if (key == 'm') {
+		keyLog[4] = false;
 	}
 }
 
@@ -124,9 +153,28 @@ void draw() {
 
 void drawStartMenu() {
 	background(0,0,0);// Black
+	fill(0, 255, 0);
+	rect(screen_width_h, screen_height_h, 100, 100);
 }
 
 void drawGameplay() {
+	// Keys
+	if (keyLog[0]) {
+		ballistae[0].fireBomb();
+	}
+	if (keyLog[1]) {
+		ballistae[1].fireBomb();
+	}
+	if (keyLog[2]) {
+		ballistae[2].fireBomb();
+	}
+	if (keyLog[3]) {
+		if (bombs.size() > 0) {bombs.get(0).explode();}
+	}
+	if (keyLog[4]) {
+		spawnWave(12);
+	}
+	
 	// Graphics
 	background(47, 150, 173);// Sky Color: 47, 150, 173
 	// Ground
