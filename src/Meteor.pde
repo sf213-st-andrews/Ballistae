@@ -1,15 +1,22 @@
 // Meteor.pde
-class Meteor extends Particle implements Circle {
-    int radius;
+private static final float massModifier = 32f;
+
+class Meteor extends Particle implements Circle, Explodable {
+    private int radius;
     boolean exploded;
     private ArrayList<Explosion> explosions;
 
     // Constructor
     Meteor(float x, float y, float xV, float yV, int radius, ArrayList<Explosion> explosions) {
-        super(x, y, xV, yV, 1f / (float)(radius*radius));// Mass increases exponentially(?) with radius.
+        super(x, y, xV, yV, massModifier / (float)(radius*radius));// Mass increases exponentially(?) with radius.
         this.radius = radius;
         this.exploded = false;
         this.explosions = explosions;
+    }
+
+    @Override
+    float getMass() {
+        return (float)(radius*radius) / massModifier;
     }
 
     @Override
@@ -25,7 +32,7 @@ class Meteor extends Particle implements Circle {
             return;
         }
         // Add Explosion to referenced Array
-        explosions.add(new Explosion(new PVector(super.position.x, super.position.y), 8, 100));
+        explosions.add(new Explosion(super.position.x, super.position.y, 8, 100));
         // Signal for Delete Self
         exploded = true;
     }
@@ -40,11 +47,9 @@ class Meteor extends Particle implements Circle {
 	}
 	boolean collidesWithCircle(Circle otherCirlce) {
         if (otherCirlce instanceof Particle) {
-			// Is this check necessary?
 			int sumRadius = bRadius + otherCirlce.getRadius();
 			Particle otherParticle = (Particle) otherCirlce;
 			float distance = super.position.dist(otherParticle.position);
-			// System.out.println("CDist: " + distance);
 			return (distance <= sumRadius);
 		}
 		System.out.println("MCWC Error: Not a Particle");// Remove?
@@ -61,7 +66,7 @@ class Meteor extends Particle implements Circle {
 			float closestY = constrain(super.position.y, otherPosition.y, otherPosition.y + rectArea.y);
 			float distance = dist(super.position.x, super.position.y, closestX, closestY);
 
-			return (distance <= bRadius);
+			return (distance < bRadius);
 		}
 		System.out.println("BCWR Error: Not a Particle");// Remove?
 		return false;
@@ -77,7 +82,7 @@ class Meteor extends Particle implements Circle {
 		}
     }
 	void handleCollisionCirlce(Circle otherCirlce) {
-        this.explode();
+        // this.explode();//CURRENTLY THIS IS CALLED
     }
 	void handleCollisionRectangle(Rectangle otherRectangle) {
         this.explode();

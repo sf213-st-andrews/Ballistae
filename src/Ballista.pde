@@ -1,8 +1,9 @@
 // Ballista.pde
-private static float magReduce = 0.1f;
+private static final float magReduce = 0.1f;
+private static final float aimLength = 512f;
+
 class Ballista extends Particle implements Rectangle {
 	// Graphics
-	private static final float aimLength		= 512;
 	private int halfRadius;
 
 	// Attributes

@@ -4,7 +4,7 @@ private static int bRadius		= 20;// Make sure Graphics draw it correctly
 private static float bInvMass	= 0.015625f;
 private static float bMass		= 64f;
 
-class Bomb extends Particle implements Circle {
+class Bomb extends Particle implements Circle, Explodable {
 	// Explosions
 	private ArrayList<Explosion> explosions;
 	private boolean exploded;
@@ -34,7 +34,7 @@ class Bomb extends Particle implements Circle {
 			return;
 		}
 		// Add Explosion to referenced Array
-		explosions.add(new Explosion(new PVector(super.position.x, super.position.y), 8, 100));
+		explosions.add(new Explosion(super.position.x, super.position.y, 8, 100));
 		// Signal for Delete Self
 		exploded = true;
 	}
@@ -55,7 +55,7 @@ class Bomb extends Particle implements Circle {
 			Particle otherParticle = (Particle) otherCirlce;
 			float distance = super.position.dist(otherParticle.position);
 			// System.out.println("CDist: " + distance);
-			return (distance <= sumRadius);
+			return (distance < sumRadius);
 		}
 		System.out.println("BCWC Error: Not a Particle");// Remove?
 		return false;
@@ -72,14 +72,20 @@ class Bomb extends Particle implements Circle {
 			float closestY = constrain(super.position.y, otherPosition.y, otherPosition.y + rectArea.y);
 			float distance = dist(super.position.x, super.position.y, closestX, closestY);
 
-			return (distance <= bRadius);
+			return (distance < bRadius);
 		}
 		System.out.println("BCWR Error: Not a Particle");// Remove?
 		return false;
 	}
 
 	void handleCollision(Collidable other) {
-		this.explode();
+		if (other instanceof Particle) {
+			Particle otherParticle = (Particle) other;
+			
+			otherParticle.addForce(super.velocity.get().mult(bMass));// Not exactly Momentum, but I'll get there
+		}
+		// this.explode();
+		this.exploded = true;// Way of deleting bomb
 		return;
 		// if (other instanceof Circle) {
 		// 	handleCollisionCirlce((Circle) other);
@@ -88,6 +94,7 @@ class Bomb extends Particle implements Circle {
 		// 	handleCollisionRectangle((Rectangle) other);
 		// 	return;
 		// }
+		// return;
 	}
 	void handleCollisionCirlce(Circle otherCirlce) {
 		return;// Return to?

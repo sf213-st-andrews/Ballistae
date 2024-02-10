@@ -66,7 +66,7 @@ void spawnWave(int waveSize) {
 	int wSect_h	= wSect / 2;
 	for (int i = 0; i < waveSize; i++) {
 		meteors.add(new Meteor(wSect * i + (float)random(0, wSect_h), -50f, 
-		(float)random(-5, 5), (float)random(-10, 20), 
+		(float)random(-1, 1), 0f, 
 		(int) random(20, 50), explosions));
 	}
 }
@@ -147,22 +147,42 @@ void draw() {
 	// Bombs
 	for (int i = bombs.size() - 1; i >= 0; i--) {
 		// Start from last to first so removing isn't a problem
-		if (bombs.get(i).exploded) {
+		Bomb bomb = bombs.get(i);
+		if (bomb.exploded) {
 			bombs.remove(i);
 			continue;
 		}
-		gravity.updateForce(bombs.get(i));
-		drag.updateForce(bombs.get(i));
-		bombs.get(i).draw();
+		gravity.updateForce(bomb);
+		drag.updateForce(bomb);
+		bomb.draw();
+		
+		for (int j = meteors.size() - 1; j >= 0; j--) {
+			Meteor meteor = meteors.get(j);// For Readablity
+			if (bomb.collidesWithCircle(meteor)) {
+				bomb.handleCollision(meteor);// Not Circle b/c that has no implementation
+				break;// Assumes no other interactions
+			}
+		}
 	}
 	// Explosions
+	// Try Optimizing this later
+	// ArrayList<Circle> circles = new ArrayList<Circle>();
+	// circles.addAll(meteors);
+	// circles.addAll(bombs);
+
 	for (int i = explosions.size() - 1; i >= 0; i--) {
 		// Start from last to first so removing isn't a problem
-		explosions.get(i).draw();
-		if (explosions.get(i).lifetime <= 0) {
+		Explosion explosion = explosions.get(i);
+		explosion.draw();
+		if (explosion.lifetime <= 0) {
 			explosions.remove(i);
 			continue;
 		}
+		// for (int j = circles.size() - 1; j >= 0; j--) {
+		// 	if (explosion.collidesWithCircle(circles.get(j))) {
+		// 		explosion.handleCollisionCirlce(circles.get(j));
+		// 	}
+		// }
 	}
 	
 	// System.out.println("Bombs size: " + bombs.size());
