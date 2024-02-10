@@ -1,9 +1,7 @@
 // Graphics
 final int screen_width			= 1200;
 final int screen_height			= 900;
-final int screen_width_half		= screen_width/2;
 final int ground_height			= 80;
-final int ground_height_half	= ground_height/2;
 
 // Physics
 public static final float DAMPING = 0.995;
@@ -159,7 +157,7 @@ void draw() {
 		for (int j = meteors.size() - 1; j >= 0; j--) {
 			Meteor meteor = meteors.get(j);// For Readablity
 			if (bomb.collidesWithCircle(meteor)) {
-				bomb.handleCollision(meteor);// Not Circle b/c that has no implementation
+				bomb.handleCollisionCirlce(meteor);// Not Circle b/c that has no implementation
 				break;// Assumes no other interactions
 			}
 		}

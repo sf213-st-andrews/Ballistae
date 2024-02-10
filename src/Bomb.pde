@@ -79,25 +79,23 @@ class Bomb extends Particle implements Circle, Explodable {
 	}
 
 	void handleCollision(Collidable other) {
-		if (other instanceof Particle) {
-			Particle otherParticle = (Particle) other;
+		if (other instanceof Circle) {
+			handleCollisionCirlce((Circle) other);
+			return;
+		} else {
+			handleCollisionRectangle((Rectangle) other);
+			return;
+		}
+	}
+	void handleCollisionCirlce(Circle otherCirlce) {
+		if (otherCirlce instanceof Particle) {
+			Particle otherParticle = (Particle) otherCirlce;
 			
 			otherParticle.addForce(super.velocity.get().mult(bMass));// Not exactly Momentum, but I'll get there
 		}
 		// this.explode();
 		this.exploded = true;// Way of deleting bomb
 		return;
-		// if (other instanceof Circle) {
-		// 	handleCollisionCirlce((Circle) other);
-		// 	return;
-		// } else {
-		// 	handleCollisionRectangle((Rectangle) other);
-		// 	return;
-		// }
-		// return;
-	}
-	void handleCollisionCirlce(Circle otherCirlce) {
-		return;// Return to?
 	}
 	void handleCollisionRectangle(Rectangle otherRectangle) {
 		return;// Return to?
