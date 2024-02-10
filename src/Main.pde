@@ -104,26 +104,34 @@ void mousePressed() {
 }
 
 void keyPressed() {
-	// Not using Switch Statement b/c two buttons can be pressed at once
-	if (key == '1') {
+  // Not using Switch Statement b/c two buttons can be pressed at once
+	if (key == '1' && !keyLog[0]) {
 		keyLog[0] = true;
+		ballistae[0].fireBomb();
 	}
-	if (key == '2') {
+	if (key == '2' && !keyLog[1]) {
 		keyLog[1] = true;
+		ballistae[1].fireBomb();
 	}
-	if (key == '3') {
+	if (key == '3' && !keyLog[2]) {
 		keyLog[2] = true;
-	}
-	if (key == ' ') {
+		ballistae[2].fireBomb();
+  	}
+	if (key == ' ' && !keyLog[3]) {
 		keyLog[3] = true;
+		if (bombs.size() > 0) {
+			for (int i = 0; i < bombs.size(); i++) {
+				bombs.get(i).explode(); // Have to explode them all. I can't just explode one at a time oh no not that.
+			}
+		}
 	}
-	// For Debugging
-	if (key == 'm') {
+	if (key == 'm' && !keyLog[4]) {
 		keyLog[4] = true;
+		spawnWave(12);
 	}
-	if (key == ENTER) {
+	if (keyCode == ENTER) {
 		// Maybe don't need a keyLog for this
-		gameState = (gameState+1) % 2;
+		gameState = (gameState + 1) % 2;
 	}
 }
 
@@ -133,17 +141,16 @@ void keyReleased() {
 	}
 	if (key == '2') {
 		keyLog[1] = false;
-	}
-	if (key == '3') {
-		keyLog[2] = false;
-	}
-	if (key == ' ') {
-		keyLog[3] = false;
-	}
-	// For Debugging
-	if (key == 'm') {
-		keyLog[4] = false;
-	}
+  	}
+  	if (key == '3') {
+  	  keyLog[2] = false;
+  	}
+  	if (key == ' ') {
+  	  keyLog[3] = false;
+  	}
+  	if (key == 'm') {
+  	  keyLog[4] = false;
+  	}
 }
 
 void draw() {
@@ -178,26 +185,26 @@ void drawStartMenu() {
 }
 
 void drawGameplay() {
-	// Keys
-	if (keyLog[0]) {
-		ballistae[0].fireBomb();
-	}
-	if (keyLog[1]) {
-		ballistae[1].fireBomb();
-	}
-	if (keyLog[2]) {
-		ballistae[2].fireBomb();
-	}
-	if (keyLog[3]) {
-		if (bombs.size() > 0) {
-			for (int i = 0; i < len; ++i) {
-				bombs.get(i).explode();// Have to explode them all. I can't just explode one at a time oh no that.
-			}
-		}
-	}
-	if (keyLog[4]) {
-		spawnWave(12);
-	}
+	// // Keys
+	// if (keyLog[0]) {
+	// 	ballistae[0].fireBomb();
+	// }
+	// if (keyLog[1]) {
+	// 	ballistae[1].fireBomb();
+	// }
+	// if (keyLog[2]) {
+	// 	ballistae[2].fireBomb();
+	// }
+	// if (keyLog[3]) {
+	// 	if (bombs.size() > 0) {
+	// 		for (int i = 0; i < len; ++i) {
+	// 			bombs.get(i).explode();// Have to explode them all. I can't just explode one at a time oh no that.
+	// 		}
+	// 	}
+	// }
+	// if (keyLog[4]) {
+	// 	spawnWave(12);
+	// }
 	
 	// Graphics
 	background(47, 150, 173);// Sky Color: 47, 150, 173
