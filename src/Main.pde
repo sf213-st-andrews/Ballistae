@@ -39,6 +39,12 @@ void setup() {
 	for (int i = 0; i < numKeys; i++) {
 		keyLog[i] = false;// Set all keys to not pressed
 	}
+	// Text Font
+	fill(255);
+	textAlign(CENTER, CENTER);
+	textSize(20);
+	textFont(createFont("Arial Bold", 20));
+
 	setupMenu();
 	setupGame();// Should the game be set up here? Make a loading screen?
 }
@@ -183,7 +189,11 @@ void drawGameplay() {
 		ballistae[2].fireBomb();
 	}
 	if (keyLog[3]) {
-		if (bombs.size() > 0) {bombs.get(0).explode();}
+		if (bombs.size() > 0) {
+			for (int i = 0; i < len; ++i) {
+				bombs.get(i).explode();// Have to explode them all. I can't just explode one at a time oh no that.
+			}
+		}
 	}
 	if (keyLog[4]) {
 		spawnWave(12);
