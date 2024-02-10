@@ -27,6 +27,6 @@ class MenuOption {
 	}
 
 	void handleMouseClick() {
-		//
+		mouseOver = true;
 	}
 }

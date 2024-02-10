@@ -39,8 +39,14 @@ void setup() {
 	for (int i = 0; i < numKeys; i++) {
 		keyLog[i] = false;// Set all keys to not pressed
 	}
-	// options =
+	setupMenu();
 	setupGame();// Should the game be set up here? Make a loading screen?
+}
+
+void setupMenu() {
+	options = new MenuOption[numOptions];
+	options[0] = new MenuOption("Start", screen_width_h, screen_height_h, 200, 50);
+	options[1] = new MenuOption("?Exit?", screen_width_h, screen_height_h + 100, 200, 50);
 }
 
 void setupGame() {
@@ -84,7 +90,11 @@ void spawnWave(int waveSize) {
 }
 
 void mousePressed() {
-	// Mouse for Menu Stuff
+	for (int i = 0; i < numOptions; i++) {
+		if (options[i].isMouseOver()) {
+			options.handleMouseClick();
+		}
+	}
 }
 
 void keyPressed() {
@@ -148,8 +158,9 @@ void draw() {
 
 void drawStartMenu() {
 	background(0,0,0);// Black
-	fill(0, 255, 0);
-	rect(screen_width_h, screen_height_h, 100, 100);
+	for (int i = 0; i < numOptions; i++) {
+		options[i].draw();
+	}
 }
 
 void drawGameplay() {
