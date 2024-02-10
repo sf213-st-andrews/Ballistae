@@ -18,7 +18,7 @@ Drag drag		= new Drag(0.001f, 0.1f);// Currently Drag does NOT depend on the siz
 int nCities = 6;
 City cities[];
 // Ballista
-int nBallis = 6;
+int nBallis = 3;
 Ballista ballistae[];
 // ArrayLists
 ArrayList<Bomb> bombs;			// Pool of ammunition
@@ -39,17 +39,19 @@ void setup() {
 	meteors		= new ArrayList<Meteor>();
 	// Cities
 	cities = new City[nCities];
-	int cSect	= screen_width / nCities; // Divide into sections
-	int cSect_q	= cSect / 4;       				// For Offset to make the sections neat
-	for (int i = 0; i < nCities; i++) {
-		cities[i] = new City((cSect * i) + cSect_q, screen_height - 40);
+	int cityWidth = 100;
+	int totalCW = cityWidth * nCities;
+	int gap = (screen_width - totalCW) / (nCities + 1);
+	for (int i = 1; i <= nCities; i++) {
+		cities[i-1] = new City(i*gap + (i-1)*cityWidth, screen_height - 40);
 	}
 	// Ballistae
 	ballistae = new Ballista[nBallis];
-	int bSect	= screen_width / nBallis; // Divide into sections
-	int bSect_q	= bSect / 4;       				// For Offset to make the sections neat
-	for(int i = 0; i < nBallis; i++) {
-		ballistae[i] = new Ballista((bSect * i) + bSect_q, screen_height - 100, bombs, explosions);
+	int ballistaWidth = 40;
+	int totalBW = ballistaWidth * nBallis;
+	gap = (screen_width - totalBW) / (nBallis + 1);
+	for(int i = 1; i <= nBallis; i++) {
+		ballistae[i-1] = new Ballista(i*gap + (i-1)*ballistaWidth, screen_height - 100, bombs, explosions);
 	}
 	
 	// Meteors

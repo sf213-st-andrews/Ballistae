@@ -1,21 +1,21 @@
 // Ballista.pde
+private static float magReduce = 0.1f;
 class Ballista extends Particle implements Rectangle {
 	// Graphics
 	private static final float aimLength		= 512;
-	float bowstringY;
+	private int halfRadius;
 
 	// Attributes
 	PVector area;
 	private ArrayList<Bomb> bombs;
 	ArrayList<Explosion> explosions;
-	private float magReduce = 0.1f;
 
 	// Constructor
 	Ballista(float x, float y, ArrayList<Bomb> bombs, ArrayList<Explosion> explosions) {
 		super(x, y, 0, 0, 0);
 		
-		this.area = new PVector(40, 50);
-		this.bowstringY = y - area.y / 2;
+		this.area = new PVector(40, 50);// could be private static
+		this.halfRadius = (int) (area.x / 2);// could be private static
 
 		this.bombs = bombs;
 		this.explosions = explosions;
@@ -23,7 +23,9 @@ class Ballista extends Particle implements Rectangle {
 
 	// Fire a bomb towards the mouse position
 	void fireBomb() {
-		bombs.add(new Bomb(super.position.x, bowstringY, (mouseX - super.position.x) * magReduce, (mouseY - super.position.y) * magReduce, explosions));
+		bombs.add(new Bomb(super.position.x + halfRadius, super.position.y,
+		(mouseX - (super.position.x + halfRadius)) * magReduce, (mouseY - super.position.y) * magReduce,
+		explosions));
 	}
 
 	PVector getArea() {
@@ -66,16 +68,18 @@ class Ballista extends Particle implements Rectangle {
 	// Draw
 	void draw() {
 		// Calculate the direction from the ballista position to the mouse position
-		PVector direction = new PVector(mouseX - super.position.x, mouseY - bowstringY);
+		PVector direction = new PVector(mouseX - super.position.x, mouseY - super.position.y);
 		direction.normalize();
 
 		stroke(255, 100, 100);
 		strokeWeight(4);
-		line(super.position.x, bowstringY, super.position.x + direction.x * aimLength, bowstringY + direction.y * aimLength);
+		line(super.position.x + halfRadius, super.position.y,
+		super.position.x + halfRadius + direction.x * aimLength, super.position.y + direction.y * aimLength);
 
 		stroke(255, 255, 255);
 		strokeWeight(1);
-		line(super.position.x, bowstringY, super.position.x + direction.x * aimLength, bowstringY + direction.y * aimLength);
+		line(super.position.x + halfRadius, super.position.y,
+		super.position.x + halfRadius + direction.x * aimLength, super.position.y + direction.y * aimLength);
 		
 		// Reset stroke
 		stroke(0, 0, 0);
@@ -83,7 +87,7 @@ class Ballista extends Particle implements Rectangle {
 
 		// Draw ballista
 		fill(165, 42, 42);
-		ellipse(super.position.x, bowstringY, area.x, area.x);
+		ellipse(super.position.x + halfRadius, super.position.y, area.x, area.x);
 		// Draw tower
 		fill(150);
 		rect(super.position.x, super.position.y, area.x, area.y);
