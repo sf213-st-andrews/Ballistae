@@ -5,7 +5,7 @@ final int ground_height			= 80;
 
 // Physics
 public static final float DAMPING = 0.995;
-Gravity gravity	= new Gravity(new PVector(0f, 0.0f));// 0.2f
+Gravity gravity	= new Gravity(new PVector(0f, 0.2f));// 0.2f
 Drag drag		= new Drag(0.001f, 0.1f);// Currently Drag does NOT depend on the size/surface area of the particle
 
 // Objects
@@ -21,12 +21,17 @@ ArrayList<Explosion> explosions;// Pool of explosions
 ArrayList<Meteor> meteors;		// Pool of meteors
 
 // int score = 0;
+int gameState = 0;// 0 Start Menu, 1 Gameplay
 
 void settings() {
 	size(screen_width, screen_height);
 }
 
 void setup() {
+	setupGame();
+}
+
+void setupGame() {
 	// Graphics
 	// ArrayList initialization
 	bombs		= new ArrayList<Bomb>();
@@ -96,9 +101,32 @@ void keyPressed() {
 	if (key == 'm') {
 		spawnWave(12);
 	}
+	if (key == ENTER) {
+		gameState = (gameState+1) % 2;
+	}
 }
 
 void draw() {
+	switch (gameState) {
+		case 0:// Start Menu
+			drawStartMenu();
+		break;
+
+		case 1:// Gameplay
+			drawGameplay();
+		break;
+
+		default :
+			drawStartMenu();
+		break;	
+	}
+}
+
+void drawStartMenu() {
+	background(0,0,0);// Black
+}
+
+void drawGameplay() {
 	// Graphics
 	background(47, 150, 173);// Sky Color: 47, 150, 173
 	// Ground
@@ -110,7 +138,7 @@ void draw() {
 		for (int j = meteors.size() - 1; j >= 0; j--) {
 			Meteor meteor = meteors.get(j);// For Readablity
 			if (cities[i].collidesWithCircle(meteor)) {
-				cities[i].intact = false;
+				cities[i].handleCollision(meteor);
 			}
 		}
 		cities[i].draw();
@@ -172,7 +200,4 @@ void draw() {
 			}
 		}
 	}
-	
-	// System.out.println("Bombs size: " + bombs.size());
-	// System.out.println("Explosions size: " + explosions.size());
 }
