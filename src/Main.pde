@@ -24,20 +24,23 @@ ArrayList<Meteor> meteors;		// Pool of meteors
 
 // GUI and User Input
 static final int numKeys = 5;
+boolean keyLog[];
 // int score = 0;
 int gameState		= 0;// 0 Start Menu, 1 Gameplay
-
-boolean keyLog[]	= new boolean[numKeys];// 6 Keys
+static final int numOptions = 2;
+MenuOption options[];
 
 void settings() {
 	size(screen_width, screen_height);
 }
 
 void setup() {
+	keyLog = new boolean[numKeys];
 	for (int i = 0; i < numKeys; i++) {
 		keyLog[i] = false;// Set all keys to not pressed
 	}
-	setupGame();
+	// options =
+	setupGame();// Should the game be set up here? Make a loading screen?
 }
 
 void setupGame() {
@@ -81,15 +84,7 @@ void spawnWave(int waveSize) {
 }
 
 void mousePressed() {
-	if (mouseButton == LEFT) {
-		for (int i = 0; i < nBallis; i++) {
-			ballistae[i].fireBomb();
-		}
-	} else {
-		for (int i = 0; i < bombs.size(); i++) {
-			bombs.get(i).explode();
-		}
-	}
+	// Mouse for Menu Stuff
 }
 
 void keyPressed() {
