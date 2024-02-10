@@ -55,9 +55,6 @@ void setup() {
 	
 	// Meteors
 	spawnWave(6);
-
-	// Force Registry
-	// forceRegistry = new ForceRegistry();
 }
 
 void spawnWave(int waveSize) {
@@ -115,7 +112,15 @@ void draw() {
 	// Meteors
 	for (int i = meteors.size() - 1; i >= 0; i--) {
 		// Start from last to first so removing isn't a problem
-		if (meteors.get(i).exploded) {
+		Meteor meteor = meteors.get(i);// For Readablity
+
+		for (int j = bombs.size() - 1; j >= 0; j--) {
+			if (meteor.collidesWithCircle(bombs.get(j))) {
+				meteor.handleCollisionCirlce(bombs.get(j));
+				break;// To break out of the for-loop
+			}
+		}
+		if (meteor.exploded) {
 			meteors.remove(i);
 			continue;
 		}

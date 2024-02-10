@@ -1,5 +1,8 @@
 // Circle.pde
 interface Circle extends Collidable {
+	// return the Circle's radius as an int.
+	int getRadius();
+
 	boolean collidesWith(Collidable other);
 	boolean collidesWithCircle(Circle otherCirlce);
 	boolean collidesWithRectangle(Rectangle otherRectangle);
