@@ -46,7 +46,7 @@ void setup() {
 void setupMenu() {
 	options = new MenuOption[numOptions];
 	options[0] = new MenuOption("Start", screen_width_h, screen_height_h, 200, 50);
-	options[1] = new MenuOption("?Exit?", screen_width_h, screen_height_h + 100, 200, 50);
+	options[1] = new MenuOption("Exit", screen_width_h, screen_height_h + 100, 200, 50);
 }
 
 void setupGame() {
@@ -92,7 +92,7 @@ void spawnWave(int waveSize) {
 void mousePressed() {
 	for (int i = 0; i < numOptions; i++) {
 		if (options[i].isMouseOver()) {
-			options.handleMouseClick();
+			options[i].handleMouseClick();
 		}
 	}
 }
@@ -160,6 +160,14 @@ void drawStartMenu() {
 	background(0,0,0);// Black
 	for (int i = 0; i < numOptions; i++) {
 		options[i].draw();
+	}
+	if (options[0].mouseOver) {
+		gameState = 1;
+		return;
+	}
+	if (options[1].mouseOver) {
+		exit();
+		return;
 	}
 }
 
