@@ -1,6 +1,6 @@
 // Particle.pde
 abstract class Particle {
-	private PVector position;
+	public PVector position;
 	private PVector velocity;
 	private PVector forceAccumulator;
 	private float invMass;

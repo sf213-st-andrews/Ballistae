@@ -8,9 +8,6 @@ public static final float DAMPING = 0.995;
 Gravity gravity	= new Gravity(new PVector(0f, 0.2f));// 0.2f
 Drag drag		= new Drag(0.001f, 0.1f);// Currently Drag does NOT depend on the size/surface area of the particle
 
-// Registry
-// ForceRegistry forceRegistry;
-
 // Objects
 // City
 int nCities = 6;
@@ -112,7 +109,6 @@ void draw() {
 		// save meteors.size() - 1 as a variable ealier?
 		for (int j = meteors.size() - 1; j >= 0; j--) {
 			Meteor meteor = meteors.get(j);// For Readablity
-
 			if (cities[i].collidesWithCircle(meteor)) {
 				cities[i].intact = false;
 			}
@@ -128,25 +124,25 @@ void draw() {
 		// Start from last to first so removing isn't a problem
 		Meteor meteor = meteors.get(i);// For Readablity
 
-		for (int j = bombs.size() - 1; j >= 0; j--) {
-			if (meteor.collidesWithCircle(bombs.get(j))) {
-				meteor.handleCollisionCirlce(bombs.get(j));
-				break;// To break out of the for-loop
-			}
-		}
-		if (meteor.exploded) {
+		// for (int j = bombs.size() - 1; j >= 0; j--) {
+		// 	if (meteor.collidesWithCircle(bombs.get(j))) {
+		// 		meteor.handleCollisionCirlce(bombs.get(j));
+		// 		break;// To break out of the for-loop
+		// 	}
+		// }
+		if (meteor.exploded || meteor.position.y > screen_height + 100) {
 			meteors.remove(i);
 			continue;
 		}
-		gravity.updateForce(meteors.get(i));
-		drag.updateForce(meteors.get(i));
-		meteors.get(i).draw();
+		gravity.updateForce(meteor);
+		drag.updateForce(meteor);
+		meteor.draw();
 	}
 	// Bombs
 	for (int i = bombs.size() - 1; i >= 0; i--) {
 		// Start from last to first so removing isn't a problem
 		Bomb bomb = bombs.get(i);
-		if (bomb.exploded) {
+		if (bomb.exploded || bomb.position.y > screen_height + 100) {
 			bombs.remove(i);
 			continue;
 		}
@@ -164,9 +160,9 @@ void draw() {
 	}
 	// Explosions
 	// Try Optimizing this later
-	// ArrayList<Circle> circles = new ArrayList<Circle>();
-	// circles.addAll(meteors);
-	// circles.addAll(bombs);
+	ArrayList<Circle> circles = new ArrayList<Circle>();
+	circles.addAll(meteors);
+	circles.addAll(bombs);
 
 	for (int i = explosions.size() - 1; i >= 0; i--) {
 		// Start from last to first so removing isn't a problem
@@ -176,11 +172,12 @@ void draw() {
 			explosions.remove(i);
 			continue;
 		}
-		// for (int j = circles.size() - 1; j >= 0; j--) {
-		// 	if (explosion.collidesWithCircle(circles.get(j))) {
-		// 		explosion.handleCollisionCirlce(circles.get(j));
-		// 	}
-		// }
+		for (int j = circles.size() - 1; j >= 0; j--) {
+			System.out.println(circles.get(j));
+			if (explosion.collidesWithCircle(circles.get(j))) {
+				explosion.handleCollisionCirlce(circles.get(j));
+			}
+		}
 	}
 	
 	// System.out.println("Bombs size: " + bombs.size());

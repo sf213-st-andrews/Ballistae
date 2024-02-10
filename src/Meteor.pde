@@ -1,5 +1,5 @@
 // Meteor.pde
-private static final float massModifier = 32f;
+private static final float massModifier = 16f;
 
 class Meteor extends Particle implements Circle, Explodable {
     private int radius;
@@ -82,7 +82,7 @@ class Meteor extends Particle implements Circle, Explodable {
 		}
     }
 	void handleCollisionCirlce(Circle otherCirlce) {
-        // this.explode();//CURRENTLY THIS IS CALLED
+        // this.explode();//CURRENTLY THIS IS NOT CALLED
     }
 	void handleCollisionRectangle(Rectangle otherRectangle) {
         this.explode();
