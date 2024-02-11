@@ -133,9 +133,9 @@ void keyPressed() {
 		keyLog[4] = false;
 		spawnWave(6);
 	}
-	if (keyCode == ENTER) {
-		// Maybe don't need a keyLog for this
-		gameState = (gameState + 1) % 2;
+	if (keyCode == ENTER && gameState != START_MENU) {
+		// Cannot Pause Game while in Start Menu
+		gameState = ((gameState + 1) % 3) + 1;// Swaps between 1 and 2
 	}
 }
 
@@ -159,12 +159,16 @@ void keyReleased() {
 
 void draw() {
 	switch (gameState) {
-		case 0:// Start Menu
+		case START_MENU:// Start Menu
 			drawStartMenu();
 		break;
 
-		case 1:// Gameplay
+		case GAMEPLAY:// Gameplay
 			drawGameplay();
+		break;
+
+		case PAUSE_MENU:// Pause Menu
+			drawPauseMenu();
 		break;
 
 		default :
@@ -194,7 +198,6 @@ void drawStartMenu() {
 		return;
 	}
 }
-
 void drawGameplay() {
 	// Graphics
 	background(47, 150, 173);
@@ -268,4 +271,8 @@ void drawGameplay() {
 			}
 		}
 	}
+}
+void drawPauseMenu() {
+	fill(0,0,0, 100);
+	rect(0,0, screen_width, screen_height);
 }
