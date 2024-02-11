@@ -26,6 +26,8 @@ Display pauseDisplay;// Use option dimensions defined earlier
 public int score;
 Display scoreDisplay;
 WaveManager waveManager;
+static final in numWaveDisplay		= 2;
+Display waveDisplay[];
 // Gameplay
 // Physics
 public static final float DAMPING = 0.995;
@@ -61,20 +63,27 @@ void setup() {
 	textSize(20);
 	textFont(createFont("Serif", 20));
 
+	setupWUI();
 	setupMenu();
 	setupGame();// Should the game be set up here? Make a loading screen?
 	setupPause();
+}
 
-	score = 0;
-	scoreDisplay = new Display(255, 215, 0, 40, "Score: " + score, screen_width_h, 50);
-	waveManager = new WaveManager();
+void setupWUI() {
+	score			= 0;
+	scoreDisplay	= new Display(255, 215, 0, 40, "Score: " + score, screen_width_h, 50);
+	
+	waveManager		= new WaveManager();
+	waveDisplay		= new Display[numWaveDisplay];
+	waveDisplay[0]	= new Display(0, 0, 0, 30, "Wave: " + waveManager.wave);
+	waveDisplay[1]	= new Display(0, 0, 0, 30, );
 }
 
 void setupMenu() {
 	startOptions	= new MenuOption[numStartOptions];
-	startOptions[0]	= new MenuOption("Play",		screen_width_h - optionWidth/2, screen_height_h - 300, optionWidth, optionHeight);
+	startOptions[0]	= new MenuOption("Play",	screen_width_h - optionWidth/2, screen_height_h - 300, optionWidth, optionHeight);
 	startOptions[1]	= new MenuOption("Restart",	screen_width_h - optionWidth/2, screen_height_h - 100, optionWidth, optionHeight);
-	startOptions[2]	= new MenuOption("Exit",		screen_width_h - optionWidth/2, screen_height_h + 200, optionWidth, optionHeight);
+	startOptions[2]	= new MenuOption("Exit",	screen_width_h - optionWidth/2, screen_height_h + 200, optionWidth, optionHeight);
 
 	startDisplay = new Display(0, 255, 128, 16, "Press ENTER to Play!", screen_width_h, screen_height_h - 200);
 }
