@@ -33,10 +33,10 @@ class Ballista extends Particle implements Rectangle,Scorable {
 	}
 
 	// Fire a bomb towards the mouse position
-	void fireBomb() {
+	void fireBomb(float x, float y) {
 		if (ammo <= 0) {return;}
 		bombs.add(new Bomb(super.position.x + halfRadius, super.position.y,
-		(mouseX - (super.position.x + halfRadius)) * magReduce, (mouseY - super.position.y) * magReduce,
+		(x - (super.position.x + halfRadius)) * magReduce, (y - super.position.y) * magReduce,
 		explosions));
 		ammo -= 1;
 		hasFired = 16;
