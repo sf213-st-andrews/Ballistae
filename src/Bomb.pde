@@ -91,10 +91,10 @@ class Bomb extends Particle implements Circle, Explodable {
 		if (otherCirlce instanceof Particle) {
 			Particle otherParticle = (Particle) otherCirlce;
 			
-			otherParticle.addForce(super.velocity.get().mult(bMass));// Not exactly Momentum, but I'll get there
+			otherParticle.addForce(super.velocity.get().mult(bMass/2));// Momentum Impulse
+			this.addForce(super.velocity.get().mult(-bMass/2));// Conservation of Momentum
+			// Can cause temporary embedding in large meteors. Keep as a "feature"? 
 		}
-		// this.explode();
-		this.exploded = true;// Way of deleting bomb
 		return;
 	}
 	void handleCollisionRectangle(Rectangle otherRectangle) {

@@ -8,7 +8,7 @@ static final int ground_height		= 80;
 // Physics
 public static final float DAMPING = 0.995;
 Gravity gravity	= new Gravity(new PVector(0f, 0.2f));// 0.2f
-Drag drag		= new Drag(0.01f, 0.1f);// Currently Drag does NOT depend on the size/surface area of the particle
+Drag drag		= new Drag(2.0f, 0.1f);// Currently Drag does NOT depend on the size/surface area of the particle
 
 // Objects
 // City
@@ -42,10 +42,6 @@ void setup() {
 		keyLog[i] = false;// Set all keys to not pressed
 	}
 	// Text Font
-	// String[] fontList = PFont.list();
-	// for (String font : fontList) {
-	// 	System.out.println(font);
-	// }
 	fill(255);
 	textAlign(CENTER, CENTER);
 	textSize(20);
@@ -85,8 +81,7 @@ void setupGame() {
 		ballistae[i-1] = new Ballista(i*gap + (i-1)*ballistaWidth, screen_height - 100, bombs, explosions);
 	}
 	
-	// Meteors
-	// spawnWave(6);
+	// Meteors // This is Test Meteor
 	meteors.add(new Meteor(250, 450, 
 		0, 0, 
 		50, explosions));
@@ -98,7 +93,7 @@ void spawnWave(int waveSize) {
 	for (int i = 0; i < waveSize; i++) {
 		meteors.add(new Meteor(wSect * i + (float)random(0, wSect_h), -50f, 
 		(float)random(-1, 1), 0f, 
-		(int) random(20, 50), explosions));
+		(int) random(30, 70), explosions));
 	}
 }
 
@@ -134,7 +129,7 @@ void keyPressed() {
 	}
 	if (key == 'm' && !keyLog[4]) {
 		keyLog[4] = true;
-		spawnWave(12);
+		spawnWave(6);
 	}
 	if (keyCode == ENTER) {
 		// Maybe don't need a keyLog for this
