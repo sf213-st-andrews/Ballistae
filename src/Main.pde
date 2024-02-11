@@ -352,11 +352,19 @@ void drawGameplay() {
 		Meteor meteor = meteors.get(i);// For Readablity
 		if (meteor.exploded) {
 			score += meteor.getScore() * waveManager.scoreMultiplier;
+			// If Radius is big enough, allow for splitting into two
+			if (waveManager.isPostWaveI() && meteor.getRadius() > 60) {
+				int r		= meteor.getRadius();
+				PVector pos	= meteor.position;
+
+				meteors.add(new Meteor((float)random(pos.x - r, pos.x + r), (float)random(pos.y - r, pos.y + r), 0, 0, r - r/4, explosions));
+				meteors.add(new Meteor((float)random(pos.x - r, pos.x + r), (float)random(pos.y - r, pos.y + r), 0, 0, r - r/4, explosions));
+			}
 			meteors.remove(i);
 			continue;
 		}
 		if (meteor.position.y > screen_height + 100) {
-			meteors.remove(i);// Remove Offscreen
+			meteors.remove(i);
 			continue;
 		}
 		gravity.updateForce(meteor);

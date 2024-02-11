@@ -58,7 +58,7 @@ class WaveManager {
 		setMultiplier();
 	}
 
-	public boolean isPastWaveOne() {
+	public boolean isPostWaveI() {
 		return (wave > 1);
 	}
 }

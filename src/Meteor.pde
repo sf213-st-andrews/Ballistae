@@ -1,23 +1,26 @@
 // Meteor.pde
-private static final float  massModifier        = 32f;
-private static final int    meteorScoreValue    = 25;
+private static final float  MASS_MODIFIER		= 32f;
+private static final int    METEOR_SCORE_VALUE	= 25;
+private static final int    METEOR_INVUN_TIME	= 16;// The time a meteor has before it becomes vunerable.
 
 class Meteor extends Particle implements Circle, Explodable, Scorable {
 	private int radius;
+	private int invunTimer;
 	boolean exploded;
 	private ArrayList<Explosion> explosions;
 
 	// Constructor
 	Meteor(float x, float y, float xV, float yV, int radius, ArrayList<Explosion> explosions) {
-		super(x, y, xV, yV, massModifier / (float)(radius*radius));// Mass increases exponentially(?) with radius.
-		this.radius = radius;
-		this.exploded = false;
-		this.explosions = explosions;
+		super(x, y, xV, yV, MASS_MODIFIER / (float)(radius*radius));// Mass increases exponentially(?) with radius.
+		this.radius		= radius;
+		this.invunTimer	= METEOR_INVUN_TIME;
+		this.exploded	= false;
+		this.explosions	= explosions;
 	}
 
 	@Override
 	float getMass() {
-		return (float)(radius*radius) / massModifier;
+		return (float)(radius*radius) / MASS_MODIFIER;
 	}
 
 	@Override
@@ -25,12 +28,13 @@ class Meteor extends Particle implements Circle, Explodable, Scorable {
 		if (exploded) {
 			return;
 		}
+		invunTimer -= 1;
 		super.integrate();
 	}
 
 	void explode() {
-		if (exploded) {
-			return;
+		if (exploded || invunTimer > 0) {
+			return;// Can't be exploded while invunerable
 		}
 		// Add Explosion to referenced Array
 		explosions.add(new Explosion(super.position.x, super.position.y, 8, (int) (radius*1.5f)));
@@ -90,7 +94,7 @@ class Meteor extends Particle implements Circle, Explodable, Scorable {
 	}
 
 	public int getScore() {
-		return meteorScoreValue;
+		return METEOR_SCORE_VALUE;
 	}
 
 	void draw() {
