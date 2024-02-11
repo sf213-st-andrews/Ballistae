@@ -1,6 +1,6 @@
 // WaveManager.pde
 
-private static int WAVE_DURATION = 600;
+private static int WAVE_DURATION = 480;// 60 = 1 second
 
 class WaveManager {
 	public int wave;

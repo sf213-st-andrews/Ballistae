@@ -26,7 +26,7 @@ Display pauseDisplay;// Use option dimensions defined earlier
 public int score;
 Display scoreDisplay;
 WaveManager waveManager;
-static final in numWaveDisplay		= 2;
+static final int numWaveDisplay		= 2;
 Display waveDisplay[];
 // Gameplay
 // Physics
@@ -75,8 +75,8 @@ void setupWUI() {
 	
 	waveManager		= new WaveManager();
 	waveDisplay		= new Display[numWaveDisplay];
-	waveDisplay[0]	= new Display(0, 0, 0, 30, "Wave: " + waveManager.wave);
-	waveDisplay[1]	= new Display(0, 0, 0, 30, );
+	waveDisplay[0]	= new Display(0, 0, 0, 30, "Wave: " + waveManager.wave,	optionWidth, 50);
+	waveDisplay[1]	= new Display(0, 0, 0, 30, "" + waveManager.lifetime,	optionWidth, 100);
 }
 
 void setupMenu() {
@@ -89,9 +89,6 @@ void setupMenu() {
 }
 
 void setupGame() {
-	// GUI
-	score = 0;
-	// Graphics
 	// ArrayList initialization
 	bombs		= new ArrayList<Bomb>();
 	explosions	= new ArrayList<Explosion>();
@@ -112,6 +109,8 @@ void setupGame() {
 	for(int i = 1; i <= nBallis; i++) {
 		ballistae[i-1] = new Ballista(i*gap + (i-1)*ballistaWidth, screen_height - 100, bombs, explosions);
 	}
+	// Meteors: First Wave
+	spawnWave(2);
 }
 
 void setupPause() {
@@ -124,12 +123,12 @@ void setupPause() {
 }
 
 void spawnWave(int waveSize) {
-	int wSect	= screen_width / waveSize;
-	int wSect_h	= wSect / 2;
 	for (int i = 0; i < waveSize; i++) {
-		meteors.add(new Meteor(wSect * i + (float)random(0, wSect_h), -50f, 
-		(float)random(-1, 1), 0f, 
-		(int) random(30, 70), explosions));
+		meteors.add(new Meteor(
+			(float)random(100, screen_width - 100), 
+			(float)random(-400, -100), 
+				(float)random(-4, 4), 0f, 
+				(int) random(30, 70), explosions));
 	}
 }
 
@@ -251,8 +250,22 @@ void draw() {
 			exit();
 		break;	
 	}
+	drawWUI();// Always draw wave UI
+}
+
+void drawWUI() {
 	scoreDisplay.updateText("Score: " + score);
-	scoreDisplay.draw(true);// Always draw score
+	scoreDisplay.draw(true);
+
+	textAlign(LEFT, CENTER);// Only time writing text aligned to the left.
+
+	waveDisplay[0].updateText("Wave: " + waveManager.wave);
+	waveDisplay[0].draw(false);
+
+	waveDisplay[1].updateText("Time: " + (waveManager.lifetime) / 60);
+	waveDisplay[1].draw(false);
+
+	textAlign(CENTER, CENTER);
 }
 
 void drawStartMenu() {
@@ -285,8 +298,9 @@ void drawGameplay() {
 	fill(24, 56, 1);
 	rect(0, screen_height - ground_height, screen_width, ground_height);
 	// GUI & Wave/Score
-	if (waveManager.updateWave()) {
-		waveManager.nextWave();
+	if (waveManager.updateWave()) {// New Wave Update
+		// Spawn new wave of meteors
+		spawnWave(waveManager.scoreMultiplier * 4);
 		// Cities
 		for (int i = 0; i < nCities; i++) {
 			for (int j = meteors.size() - 1; j >= 0; j--) {
@@ -295,11 +309,22 @@ void drawGameplay() {
 					cities[i].handleCollision(meteor);
 				}
 			}
-			cities[i].draw();
 			score += cities[i].getScore() * waveManager.scoreMultiplier;
+			if (score > 10000 && !cities[i].intact) {
+				score -= 10000;
+				cities[i].intact = true;
+			}
+			cities[i].draw();
 		}
-	} else {
+		// Ballistae
+		for (int i = 0; i < nBallis; i++) {
+			score += ballistae[i].getScore() * waveManager.scoreMultiplier;
+			ballistae[i].draw();
+		}
+		waveManager.nextWave();// Move to next wave last.
+	} else {// Normal Update
 		// Cities
+		boolean cityAlive = false;// Assuming defeat, will check for success.
 		for (int i = 0; i < nCities; i++) {
 			for (int j = meteors.size() - 1; j >= 0; j--) {
 				Meteor meteor = meteors.get(j);// For Readablity
@@ -307,14 +332,20 @@ void drawGameplay() {
 					cities[i].handleCollision(meteor);
 				}
 			}
+			// Check for Game Over NOT IN NEW WAVE section, since a city could be saved there.
+			cityAlive = (cityAlive || cities[i].intact);
 			cities[i].draw();
+		}
+		if (!cityAlive) {
+			gameState = START_MENU;
+			return;
+		}
+		// Ballistae
+		for (int i = 0; i < nBallis; i++) {
+			ballistae[i].draw();
 		}
 	}
 	
-	// Ballistae
-	for (int i = 0; i < nBallis; i++) {
-		ballistae[i].draw();
-	}
 	// Meteors
 	for (int i = meteors.size() - 1; i >= 0; i--) {
 		// Start from last to first so removing isn't a problem

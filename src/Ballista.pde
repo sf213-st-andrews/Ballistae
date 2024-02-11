@@ -123,7 +123,9 @@ class Ballista extends Particle implements Rectangle,Scorable {
 	}
 
 	public int getScore() {
-		return (MAX_AMMO - ammo) * BOMB_SCORE_VALUE;
+		int score = ammo * BOMB_SCORE_VALUE;
+		ammo = MAX_AMMO;// Reset the ammo when a wave is over and the score is called.
+		return score;
 	}
 
 	// Draw
