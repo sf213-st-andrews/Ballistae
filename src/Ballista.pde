@@ -1,9 +1,10 @@
 // Ballista.pde
-private static final float magReduce = 0.1f;
-//private static final float aimLength = 512f;
-private static final float spacing	 = 20f;
+private static final float 	magReduce		= 0.1f;
+private static final float 	SPACING			= 20f;
+private static final int 	MAX_AMMO		= 10;
+private static final int 	BOMB_SCORE_VALUE= 5;
 
-class Ballista extends Particle implements Rectangle {
+class Ballista extends Particle implements Rectangle,Scorable {
 	// Graphics
 	private int halfRadius;
 
@@ -22,7 +23,7 @@ class Ballista extends Particle implements Rectangle {
 		this.area = new PVector(40, 50);// could be private static
 		this.halfRadius = (int) (area.x / 2);// could be private static
 
-		this.ammo = 99;
+		this.ammo = MAX_AMMO;
 		this.ammoDisplay = new Display("" + ammo, super.position.x + halfRadius, super.position.y + halfRadius);
 		this.hasFired = 0;
 
@@ -79,7 +80,7 @@ class Ballista extends Particle implements Rectangle {
 
 	void drawAim() {
 		float distance = dist(mouseX, mouseY, super.position.x + halfRadius, super.position.y);
-		float segmentLength = spacing * 2;
+		float segmentLength = SPACING * 2;
 		float segments = distance / segmentLength;
 
 		float deltaX = (mouseX - super.position.x - halfRadius) / segments;
@@ -120,6 +121,11 @@ class Ballista extends Particle implements Rectangle {
 		ammoDisplay.updateText("" + ammo);
 		ammoDisplay.draw(true);
 	}
+
+	public int getScore() {
+		return (MAX_AMMO - ammo) * BOMB_SCORE_VALUE;
+	}
+
 	// Draw
 	void draw() {
 		drawAim();

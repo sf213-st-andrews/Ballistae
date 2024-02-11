@@ -25,11 +25,12 @@ Display pauseDisplay;// Use option dimensions defined earlier
 // Score Display
 public int score;
 Display scoreDisplay;
+WaveManager waveManager;
 // Gameplay
 // Physics
 public static final float DAMPING = 0.995;
 Gravity gravity	= new Gravity(new PVector(0f, 0.2f));// 0.2f
-Drag drag		= new Drag(2.0f, 0.1f);// Currently Drag does NOT depend on the size/surface area of the particle
+Drag drag		= new Drag(2.0f, 0.1f);
 
 // Objects
 // City
@@ -66,6 +67,7 @@ void setup() {
 
 	score = 0;
 	scoreDisplay = new Display(255, 215, 0, 40, "Score: " + score, screen_width_h, 50);
+	waveManager = new WaveManager();
 }
 
 void setupMenu() {
@@ -78,6 +80,8 @@ void setupMenu() {
 }
 
 void setupGame() {
+	// GUI
+	score = 0;
 	// Graphics
 	// ArrayList initialization
 	bombs		= new ArrayList<Bomb>();
@@ -271,16 +275,33 @@ void drawGameplay() {
 	// Ground
 	fill(24, 56, 1);
 	rect(0, screen_height - ground_height, screen_width, ground_height);
-	// Cities
-	for (int i = 0; i < nCities; i++) {
-		for (int j = meteors.size() - 1; j >= 0; j--) {
-			Meteor meteor = meteors.get(j);// For Readablity
-			if (cities[i].collidesWithCircle(meteor)) {
-				cities[i].handleCollision(meteor);
+	// GUI & Wave/Score
+	if (waveManager.updateWave()) {
+		waveManager.nextWave();
+		// Cities
+		for (int i = 0; i < nCities; i++) {
+			for (int j = meteors.size() - 1; j >= 0; j--) {
+				Meteor meteor = meteors.get(j);// For Readablity
+				if (cities[i].collidesWithCircle(meteor)) {
+					cities[i].handleCollision(meteor);
+				}
 			}
+			cities[i].draw();
+			score += cities[i].getScore() * waveManager.scoreMultiplier;
 		}
-		cities[i].draw();
+	} else {
+		// Cities
+		for (int i = 0; i < nCities; i++) {
+			for (int j = meteors.size() - 1; j >= 0; j--) {
+				Meteor meteor = meteors.get(j);// For Readablity
+				if (cities[i].collidesWithCircle(meteor)) {
+					cities[i].handleCollision(meteor);
+				}
+			}
+			cities[i].draw();
+		}
 	}
+	
 	// Ballistae
 	for (int i = 0; i < nBallis; i++) {
 		ballistae[i].draw();
@@ -289,9 +310,13 @@ void drawGameplay() {
 	for (int i = meteors.size() - 1; i >= 0; i--) {
 		// Start from last to first so removing isn't a problem
 		Meteor meteor = meteors.get(i);// For Readablity
-
-		if (meteor.exploded || meteor.position.y > screen_height + 100) {
+		if (meteor.exploded) {
+			score += meteor.getScore() * waveManager.scoreMultiplier;
 			meteors.remove(i);
+			continue;
+		}
+		if (meteor.position.y > screen_height + 100) {
+			meteors.remove(i);// Remove Offscreen
 			continue;
 		}
 		gravity.updateForce(meteor);
@@ -325,7 +350,6 @@ void drawGameplay() {
 	circles.addAll(bombs);
 
 	for (int i = explosions.size() - 1; i >= 0; i--) {
-		// Start from last to first so removing isn't a problem
 		Explosion explosion = explosions.get(i);// For Readability
 		explosion.draw();
 		if (explosion.lifetime <= 0) {

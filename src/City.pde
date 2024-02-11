@@ -1,6 +1,8 @@
 // City.pde
 
-class City extends Particle implements Rectangle{
+private static final int 	CITY_SCORE_VALUE = 100;
+
+class City extends Particle implements Rectangle,Scorable {
 	// City Properties
 	private PVector area;// Could be a static final variable, but I want to keep my options open.
 	public boolean intact;// public b/c it's easy
@@ -21,8 +23,6 @@ class City extends Particle implements Rectangle{
 		else {return collidesWithRectangle((Rectangle) other);}
 	}
 	boolean collidesWithCircle(Circle otherCirlce) {
-		// instanceof Meteor?
-		// DOUBLE CHECK this, I made it without thinking it through
 		if (otherCirlce instanceof Particle) {
 			int otherRadius = otherCirlce.getRadius();
 			
@@ -33,7 +33,7 @@ class City extends Particle implements Rectangle{
 			float closestY = constrain(otherPosition.y, super.position.y, super.position.y + this.area.y);
 			float distance = dist(otherPosition.x, otherPosition.y, closestX, closestY);
 
-			return (distance < otherRadius);// float int comparison problems?
+			return (distance < otherRadius);
 		}
 		System.out.println("CCWC Error: Not a Particle");// Remove?
 		return false;
@@ -48,6 +48,13 @@ class City extends Particle implements Rectangle{
 	}
 	void handleCollisionCirlce(Circle otherCirlce) {return;}// If something collides, then it's dead.
 	void handleCollisionRectangle(Rectangle otherRectangle) {return;}// If something collides, then it's dead.
+
+	public int getScore() {
+		if (intact) {
+			return 	CITY_SCORE_VALUE;
+		}
+		return 0;
+	}
 
 	void draw() {
 		if (intact) {
