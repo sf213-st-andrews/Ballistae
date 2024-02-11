@@ -26,10 +26,13 @@ ArrayList<Meteor> meteors;		// Pool of meteors
 static final int numKeys = 5;
 boolean keyLog[];
 // int score = 0;
-int gameState		= 0;// 0 Start Menu, 1 Gameplay
-static final int numOptions		= 3;
-static final int optionWidth	= 200;
-static final int optionHeight	= 50;
+public static final int START_MENU	= 0;// 0 Start Menu
+public static final int GAMEPLAY	= 1;// 1 Gameplay
+public static final int PAUSE_MENU	= 2;// 2 Pause Menu
+int gameState;
+static final int numOptions			= 3;
+static final int optionWidth		= 200;
+static final int optionHeight		= 50;
 MenuOption options[];
 
 void settings() {
@@ -37,9 +40,10 @@ void settings() {
 }
 
 void setup() {
+	gameState = 0;
 	keyLog = new boolean[numKeys];
 	for (int i = 0; i < numKeys; i++) {
-		keyLog[i] = false;// Set all keys to not pressed
+		keyLog[i] = true;// Set all keys to ready to be pressed
 	}
 	// Text Font
 	fill(255);
@@ -107,28 +111,26 @@ void mousePressed() {
 
 void keyPressed() {
   // Not using Switch Statement b/c two buttons can be pressed at once
-	if (key == '1' && !keyLog[0]) {
-		keyLog[0] = true;
+	if (key == '1' && keyLog[0]) {
+		keyLog[0] = false;
 		ballistae[0].fireBomb();
 	}
-	if (key == '2' && !keyLog[1]) {
-		keyLog[1] = true;
+	if (key == '2' && keyLog[1]) {
+		keyLog[1] = false;
 		ballistae[1].fireBomb();
 	}
-	if (key == '3' && !keyLog[2]) {
-		keyLog[2] = true;
+	if (key == '3' && keyLog[2]) {
+		keyLog[2] = false;
 		ballistae[2].fireBomb();
   	}
-	if (key == ' ' && !keyLog[3]) {
-		keyLog[3] = true;
-		if (bombs.size() > 0) {
-			for (int i = 0; i < bombs.size(); i++) {
-				bombs.get(i).explode(); // Have to explode them all. I can't just explode one at a time oh no not that.
-			}
+	if (key == ' ' && keyLog[3]) {
+		keyLog[3] = false;
+		for (int i = 0; i < bombs.size(); i++) {
+			bombs.get(i).explode(); // Have to explode them all. Bomb removal is early on the game draw list. Don't do it here.
 		}
 	}
-	if (key == 'm' && !keyLog[4]) {
-		keyLog[4] = true;
+	if (key == 'm' && keyLog[4]) {
+		keyLog[4] = false;
 		spawnWave(6);
 	}
 	if (keyCode == ENTER) {
@@ -139,19 +141,19 @@ void keyPressed() {
 
 void keyReleased() {
 	if (key == '1') {
-		keyLog[0] = false;
+		keyLog[0] = true;
 	}
 	if (key == '2') {
-		keyLog[1] = false;
+		keyLog[1] = true;
   	}
   	if (key == '3') {
-  	  keyLog[2] = false;
+  	  keyLog[2] = true;
   	}
   	if (key == ' ') {
-  	  keyLog[3] = false;
+  	  keyLog[3] = true;
   	}
   	if (key == 'm') {
-  	  keyLog[4] = false;
+  	  keyLog[4] = true;
   	}
 }
 
@@ -241,8 +243,8 @@ void drawGameplay() {
 		for (int j = meteors.size() - 1; j >= 0; j--) {
 			Meteor meteor = meteors.get(j);// For Readablity
 			if (bomb.collidesWithCircle(meteor)) {
-				bomb.handleCollisionCirlce(meteor);// Not Circle b/c that has no implementation
-				break;// Assumes no other interactions
+				bomb.handleCollisionCirlce(meteor);
+				break;// Assumes no other collisions will happen
 			}
 		}
 	}
@@ -254,7 +256,7 @@ void drawGameplay() {
 
 	for (int i = explosions.size() - 1; i >= 0; i--) {
 		// Start from last to first so removing isn't a problem
-		Explosion explosion = explosions.get(i);
+		Explosion explosion = explosions.get(i);// For Readability
 		explosion.draw();
 		if (explosion.lifetime <= 0) {
 			explosions.remove(i);
