@@ -371,7 +371,7 @@ void drawGameplay() {
 			if (waveManager.isPostWaveI() && meteor.getRadius() > 60) {
 				int r			= meteor.getRadius();
 				PVector pos		= meteor.position;
-				int numShards	= random(2, 5);
+				int numShards	= (int) random(2, 5);
 				for (int i = 0; i < numShards; i++) {
 					meteors.add(new Meteor((float)random(pos.x - r, pos.x + r), (float)random(pos.y - r, pos.y + r), 0, 0, r - r/4, explosions));
 				
