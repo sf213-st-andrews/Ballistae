@@ -43,7 +43,6 @@ class Ballista extends Particle implements Rectangle {
 		else {return collidesWithRectangle((Rectangle) other);}
 	}
 	boolean collidesWithCircle(Circle otherCirlce) {
-		// DOUBLE CHECK this, I made it without thinking it through
 		if (otherCirlce instanceof Particle) {
 			int otherRadius = otherCirlce.getRadius();
 			
@@ -71,8 +70,7 @@ class Ballista extends Particle implements Rectangle {
 	void handleCollisionCirlce(Circle otherCirlce) {return;}// If something collides, then it's dead.
 	void handleCollisionRectangle(Rectangle otherRectangle) {return;}// If something collides, then it's dead.
 
-	void displayAim() {
-		// PVector direction = new PVector(mouseX - super.position.x, mouseY - super.position.y);
+	void drawAim() {
 		float distance = dist(mouseX, mouseY, super.position.x + halfRadius, super.position.y);
 		float segmentLength = spacing * 2;
 		float segments = distance / segmentLength;
@@ -98,7 +96,7 @@ class Ballista extends Particle implements Rectangle {
 		// Reset stroke
 		stroke(0, 0, 0);
 	}
-	void displayBuilding() {
+	void drawBuilding() {
 		// Draw ballista
 		fill(165, 42, 42);
 		ellipse(super.position.x + halfRadius, super.position.y, area.x, area.x);
@@ -109,15 +107,13 @@ class Ballista extends Particle implements Rectangle {
 	}
 	void displayAmmo() {
 		fill(255);
-		textAlign(CENTER, CENTER);
 		textSize(20);
-		textFont(createFont("Arial Bold", 20));
-    	text(ammo, super.position.x + halfRadius, super.position.y + halfRadius);
+    	text("" + ammo, super.position.x + halfRadius, super.position.y + halfRadius);
 	}
 	// Draw
 	void draw() {
-		displayAim();
-		displayBuilding();
+		drawAim();
+		drawBuilding();
 		displayAmmo();
 	}
 }

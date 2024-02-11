@@ -8,7 +8,7 @@ static final int ground_height		= 80;
 // Physics
 public static final float DAMPING = 0.995;
 Gravity gravity	= new Gravity(new PVector(0f, 0.2f));// 0.2f
-Drag drag		= new Drag(0.001f, 0.1f);// Currently Drag does NOT depend on the size/surface area of the particle
+Drag drag		= new Drag(0.01f, 0.1f);// Currently Drag does NOT depend on the size/surface area of the particle
 
 // Objects
 // City
@@ -27,7 +27,9 @@ static final int numKeys = 5;
 boolean keyLog[];
 // int score = 0;
 int gameState		= 0;// 0 Start Menu, 1 Gameplay
-static final int numOptions = 2;
+static final int numOptions		= 3;
+static final int optionWidth	= 200;
+static final int optionHeight	= 50;
 MenuOption options[];
 
 void settings() {
@@ -40,10 +42,14 @@ void setup() {
 		keyLog[i] = false;// Set all keys to not pressed
 	}
 	// Text Font
+	// String[] fontList = PFont.list();
+	// for (String font : fontList) {
+	// 	System.out.println(font);
+	// }
 	fill(255);
 	textAlign(CENTER, CENTER);
 	textSize(20);
-	textFont(createFont("Arial Bold", 20));
+	textFont(createFont("Serif", 20));
 
 	setupMenu();
 	setupGame();// Should the game be set up here? Make a loading screen?
@@ -51,8 +57,9 @@ void setup() {
 
 void setupMenu() {
 	options = new MenuOption[numOptions];
-	options[0] = new MenuOption("Start", screen_width_h, screen_height_h, 200, 50);
-	options[1] = new MenuOption("Exit", screen_width_h, screen_height_h + 100, 200, 50);
+	options[0] = new MenuOption("Play",		screen_width_h - optionWidth/2, screen_height_h - 200, optionWidth, optionHeight);
+	options[1] = new MenuOption("Restart",	screen_width_h - optionWidth/2, screen_height_h - 100, optionWidth, optionHeight);
+	options[2] = new MenuOption("Exit",		screen_width_h - optionWidth/2, screen_height_h + 200, optionWidth, optionHeight);
 }
 
 void setupGame() {
@@ -176,44 +183,29 @@ void drawStartMenu() {
 	}
 	if (options[0].mouseOver) {
 		gameState = 1;
+		options[0].mouseOver = false;
 		return;
 	}
 	if (options[1].mouseOver) {
+		gameState = 1;
+		options[1].mouseOver = false;
+		setupGame();// Restarts the game
+		return;
+	}
+	if (options[2].mouseOver) {
 		exit();
 		return;
 	}
 }
 
 void drawGameplay() {
-	// // Keys
-	// if (keyLog[0]) {
-	// 	ballistae[0].fireBomb();
-	// }
-	// if (keyLog[1]) {
-	// 	ballistae[1].fireBomb();
-	// }
-	// if (keyLog[2]) {
-	// 	ballistae[2].fireBomb();
-	// }
-	// if (keyLog[3]) {
-	// 	if (bombs.size() > 0) {
-	// 		for (int i = 0; i < len; ++i) {
-	// 			bombs.get(i).explode();// Have to explode them all. I can't just explode one at a time oh no that.
-	// 		}
-	// 	}
-	// }
-	// if (keyLog[4]) {
-	// 	spawnWave(12);
-	// }
-	
 	// Graphics
-	background(47, 150, 173);// Sky Color: 47, 150, 173
+	background(47, 150, 173);
 	// Ground
 	fill(24, 56, 1);
 	rect(0, screen_height - ground_height, screen_width, ground_height);
 	// Cities
 	for (int i = 0; i < nCities; i++) {
-		// save meteors.size() - 1 as a variable ealier?
 		for (int j = meteors.size() - 1; j >= 0; j--) {
 			Meteor meteor = meteors.get(j);// For Readablity
 			if (cities[i].collidesWithCircle(meteor)) {
