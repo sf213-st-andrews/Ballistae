@@ -371,11 +371,13 @@ void drawGameplay() {
 			if (waveManager.isPostWaveI() && meteor.getRadius() > 60) {
 				int r			= meteor.getRadius();
 				PVector pos		= meteor.position;
-				int numShards	= (int) random(2, 5);
-				for (int j = 0; i < numShards; j++) {
-					meteors.add(new Meteor((float)random(pos.x - r, pos.x + r), (float)random(pos.y - r, pos.y + r), 0, 0, r - r/4, explosions));
+				// int numShards	= (int) random(2, 5);
+				// for (int j = 0; i < numShards; j++) {
+				// 	meteors.add(new Meteor((float)random(pos.x - r, pos.x + r), (float)random(pos.y - r, pos.y + r), 0, 0, r - r/4, explosions));
 				
-				}
+				// }
+				meteors.add(new Meteor((float)random(pos.x - r, pos.x + r), (float)random(pos.y - r, pos.y + r), 0, 0, r - r/4, explosions));
+				meteors.add(new Meteor((float)random(pos.x - r, pos.x + r), (float)random(pos.y - r, pos.y + r), 0, 0, r - r/4, explosions));
 			}
 			meteors.remove(i);
 			continue;
