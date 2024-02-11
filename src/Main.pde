@@ -11,17 +11,19 @@ boolean keyLog[];
 public static final int START_MENU	= 0;// 0 Start Menu
 public static final int GAMEPLAY	= 1;// 1 Gameplay
 public static final int PAUSE_MENU	= 2;// 2 Pause Menu
+public boolean 			G_SETUP		= false;
 int gameState;
 // Start Menu
 static final int numStartOptions	= 3;
-static final int optionWidth		= 200;
+static final int optionWidth		= 250;
 static final int optionHeight		= 50;
 MenuOption startOptions[];
 Display startDisplay;
 // Pause Menu
 static final int numPauseOptions	= 3;
+static final int numPauseDisplay	= 3;
 MenuOption pauseOptions[];
-Display pauseDisplay;// Use option dimensions defined earlier
+Display pauseDisplay[];// Use option dimensions defined earlier
 // Score Display
 public int score;
 Display scoreDisplay;
@@ -63,9 +65,7 @@ void setup() {
 	textSize(20);
 	textFont(createFont("Serif", 20));
 
-	setupWUI();
 	setupMenu();
-	setupGame();// Should the game be set up here? Make a loading screen?
 	setupPause();
 }
 
@@ -75,20 +75,23 @@ void setupWUI() {
 	
 	waveManager		= new WaveManager();
 	waveDisplay		= new Display[numWaveDisplay];
-	waveDisplay[0]	= new Display(0, 0, 0, 30, "Wave: " + waveManager.wave,	optionWidth, 50);
-	waveDisplay[1]	= new Display(0, 0, 0, 30, "" + waveManager.lifetime,	optionWidth, 100);
+	waveDisplay[0]	= new Display(0, 0, 0, 30, "Wave: " + waveManager.wave,	20, 40);
+	waveDisplay[1]	= new Display(0, 0, 0, 30, "" + waveManager.lifetime,	20, 80);
 }
 
 void setupMenu() {
 	startOptions	= new MenuOption[numStartOptions];
-	startOptions[0]	= new MenuOption("Play",	screen_width_h - optionWidth/2, screen_height_h - 300, optionWidth, optionHeight);
-	startOptions[1]	= new MenuOption("Restart",	screen_width_h - optionWidth/2, screen_height_h - 100, optionWidth, optionHeight);
-	startOptions[2]	= new MenuOption("Exit",	screen_width_h - optionWidth/2, screen_height_h + 200, optionWidth, optionHeight);
+	startOptions[0]	= new MenuOption("Resume",		screen_width_h - optionWidth/2 - 300, screen_height - optionHeight*2, optionWidth, optionHeight);
+	startOptions[1]	= new MenuOption("New Game",	screen_width_h - optionWidth/2 + 000, screen_height - optionHeight*2, optionWidth, optionHeight);
+	startOptions[2]	= new MenuOption("Exit Game",	screen_width_h - optionWidth/2 + 300, screen_height - optionHeight*2, optionWidth, optionHeight);
 
 	startDisplay = new Display(0, 255, 128, 16, "Press ENTER to Play!", screen_width_h, screen_height_h - 200);
 }
 
 void setupGame() {
+	// Setup the Wave UI
+	G_SETUP = true;
+	setupWUI();
 	// ArrayList initialization
 	bombs		= new ArrayList<Bomb>();
 	explosions	= new ArrayList<Explosion>();
@@ -115,11 +118,14 @@ void setupGame() {
 
 void setupPause() {
 	pauseOptions	= new MenuOption[numPauseOptions];
-	pauseOptions[0]	= new MenuOption("Resume",	screen_width_h - optionWidth/2, screen_height_h - 300, optionWidth, optionHeight);
-	pauseOptions[1]	= new MenuOption("Restart",	screen_width_h - optionWidth/2, screen_height_h - 100, optionWidth, optionHeight);
-	pauseOptions[2]	= new MenuOption("Return",	screen_width_h - optionWidth/2, screen_height_h + 200, optionWidth, optionHeight);
+	pauseOptions[0]	= new MenuOption("Resume",	screen_width_h - optionWidth/2 - 300, screen_height_h, optionWidth, optionHeight);
+	pauseOptions[1]	= new MenuOption("Restart",	screen_width_h - optionWidth/2 + 000, screen_height_h, optionWidth, optionHeight);
+	pauseOptions[2]	= new MenuOption("Return",	screen_width_h - optionWidth/2 + 300, screen_height_h, optionWidth, optionHeight);
 	
-	pauseDisplay	= new Display(0, 255, 128, 16, "Press ENTER Resume!", screen_width_h, screen_height_h - 200);
+	pauseDisplay	= new Display[numPauseDisplay];
+	pauseDisplay[0]	= new Display(64, 255, 64, 24, "Press ENTER to Resume!",	screen_width_h - 300, screen_height_h - 80);
+	pauseDisplay[1]	= new Display(64, 255, 64, 24, "Restart Game",				screen_width_h + 000, screen_height_h - 80);
+	pauseDisplay[2]	= new Display(64, 255, 64, 24, "Return to Main Menu",		screen_width_h + 300, screen_height_h - 80);
 }
 
 void spawnWave(int waveSize) {
@@ -143,9 +149,16 @@ void mousePressed() {
 		break;
 
 		case GAMEPLAY:
-			for (int i = 0; i < nBallis; i++) {
+			if (mouseButton == LEFT) {
+				for (int i = 0; i < nBallis; i++) {
 				ballistae[i].fireBomb();
+				}
+			} else {
+				for (int i = 0; i < bombs.size(); i++) {
+					bombs.get(i).explode();
+				}
 			}
+			
 		break;
 
 		case PAUSE_MENU:
@@ -181,17 +194,15 @@ void keyPressed() {
 	if (key == ' ' && keyLog[3]) {
 		keyLog[3] = false;
 		for (int i = 0; i < bombs.size(); i++) {
-			bombs.get(i).explode(); // Have to explode them all. Bomb removal is early on the game draw list. Don't do it here.
+			bombs.get(i).explode();
 		}
 	}
-	if (key == 'm' && keyLog[4]) {
+	if (keyCode == ENTER && keyLog[4]) {
 		keyLog[4] = false;
-		spawnWave(6);
-	}
-	if (keyCode == ENTER) {
 		switch (gameState) {
 			case START_MENU:
 				gameState = GAMEPLAY;
+				if (!G_SETUP) {setupGame();}
 			break;
 			
 			case GAMEPLAY:
@@ -226,7 +237,7 @@ void keyReleased() {
   	if (key == ' ') {
   	  keyLog[3] = true;
   	}
-  	if (key == 'm') {
+  	if (key == ENTER) {
   	  keyLog[4] = true;
   	}
 }
@@ -239,6 +250,7 @@ void draw() {
 
 		case GAMEPLAY:// Gameplay
 			drawGameplay();
+			drawWUI();
 		break;
 
 		case PAUSE_MENU:// Pause Menu
@@ -250,7 +262,7 @@ void draw() {
 			exit();
 		break;	
 	}
-	drawWUI();// Always draw wave UI
+	// if (G_SETUP) {drawWUI();}// Always draw wave UI when Game is Setup
 }
 
 void drawWUI() {
@@ -262,7 +274,7 @@ void drawWUI() {
 	waveDisplay[0].updateText("Wave: " + waveManager.wave);
 	waveDisplay[0].draw(false);
 
-	waveDisplay[1].updateText("Time: " + (waveManager.lifetime) / 60);
+	waveDisplay[1].updateText("Time: " + (waveManager.lifetime) / 60 + "." + (int)(((waveManager.lifetime) % 60) * 1.667f));
 	waveDisplay[1].draw(false);
 
 	textAlign(CENTER, CENTER);
@@ -270,12 +282,14 @@ void drawWUI() {
 
 void drawStartMenu() {
 	background(0,0,0);// Black
-	for (int i = 0; i < numStartOptions; i++) {
-		startOptions[i].draw();
-	}
+	
+	if (G_SETUP) {startOptions[0].draw();}
+	startOptions[1].draw();
+	startOptions[2].draw();
+
 	startDisplay.draw(false);
 	
-	if (startOptions[0].mouseOver) {
+	if (startOptions[0].mouseOver && G_SETUP) {
 		gameState = GAMEPLAY;
 		startOptions[0].mouseOver = false;
 		return;
@@ -338,6 +352,7 @@ void drawGameplay() {
 		}
 		if (!cityAlive) {
 			gameState = START_MENU;
+			G_SETUP = false;
 			return;
 		}
 		// Ballistae
@@ -414,8 +429,8 @@ void drawGameplay() {
 void drawPauseMenu() {
 	for (int i = 0; i < numPauseOptions; i++) {
 		pauseOptions[i].draw();
+		pauseDisplay[i].draw(true);// num of displays == num of options
 	}
-	pauseDisplay.draw(false);
 	
 	if (pauseOptions[0].mouseOver) {
 		gameState = GAMEPLAY;
@@ -430,6 +445,7 @@ void drawPauseMenu() {
 	}
 	if (pauseOptions[2].mouseOver) {
 		gameState = START_MENU;
+		pauseOptions[2].mouseOver = false;
 		return;
 	}
 }

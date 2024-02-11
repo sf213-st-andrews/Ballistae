@@ -65,4 +65,3 @@ class City extends Particle implements Rectangle,Scorable {
 		rect(super.position.x, super.position.y, area.x, area.y);
 	}
 }
-

@@ -102,7 +102,8 @@ class Meteor extends Particle implements Circle, Explodable, Scorable {
 		integrate();
 
 		// Graphics
-		fill(169, 169, 169); // Temp Dark Grey
+		if (radius > 60) {fill(120, 120, 120);}
+		else {fill(169, 169, 169);}
 		ellipse(super.position.x, super.position.y, radius, radius);
 	}
 }
