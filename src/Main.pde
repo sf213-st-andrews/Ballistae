@@ -181,15 +181,15 @@ void keyPressed() {
 	// Unfortunatly, can press keys while paused.
 	if (key == '1' && keyLog[0]) {
 		keyLog[0] = false;
-		ballistae[0].ballistae[i].fireBomb(mouseX, mouseY);
+		ballistae[0].fireBomb(mouseX, mouseY);
 	}
 	if (key == '2' && keyLog[1]) {
 		keyLog[1] = false;
-		ballistae[1].ballistae[i].fireBomb(mouseX, mouseY);
+		ballistae[1].fireBomb(mouseX, mouseY);
 	}
 	if (key == '3' && keyLog[2]) {
 		keyLog[2] = false;
-		ballistae[2].ballistae[i].fireBomb(mouseX, mouseY);
+		ballistae[2].fireBomb(mouseX, mouseY);
   	}
 	if (key == ' ' && keyLog[3]) {
 		keyLog[3] = false;
