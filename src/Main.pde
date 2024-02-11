@@ -4,10 +4,10 @@ static final int screen_width_h		= screen_width/2;
 static final int screen_height		= 900;
 static final int screen_height_h	= screen_height/2;
 static final int ground_height		= 80;
-// GUI and User Input
+// User Input
 static final int numKeys = 5;
 boolean keyLog[];
-// int score = 0;
+// GUI
 public static final int START_MENU	= 0;// 0 Start Menu
 public static final int GAMEPLAY	= 1;// 1 Gameplay
 public static final int PAUSE_MENU	= 2;// 2 Pause Menu
@@ -18,7 +18,13 @@ static final int optionWidth		= 200;
 static final int optionHeight		= 50;
 MenuOption startOptions[];
 Display startDisplay;
-
+// Pause Menu
+static final int numPauseOptions	= 3;
+MenuOption pauseOptions[];
+Display pauseDisplay;// Use option dimensions defined earlier
+// Score Display
+public int score;
+Display scoreDisplay;
 // Gameplay
 // Physics
 public static final float DAMPING = 0.995;
@@ -36,11 +42,6 @@ Ballista ballistae[];
 ArrayList<Bomb> bombs;			// Pool of ammunition
 ArrayList<Explosion> explosions;// Pool of explosions
 ArrayList<Meteor> meteors;		// Pool of meteors
-
-// Pause Menu
-static final int numPauseOptions	= 3;
-MenuOption pauseOptions[];
-Display pauseDisplay;// Use option dimensions defined earlier
 
 
 void settings() {
@@ -62,6 +63,9 @@ void setup() {
 	setupMenu();
 	setupGame();// Should the game be set up here? Make a loading screen?
 	setupPause();
+
+	score = 0;
+	scoreDisplay = new Display(255, 215, 0, 40, "Score: " + score, screen_width_h, 50);
 }
 
 void setupMenu() {
@@ -234,6 +238,8 @@ void draw() {
 			exit();
 		break;	
 	}
+	scoreDisplay.updateText("Score: " + score);
+	scoreDisplay.draw(true);// Always draw score
 }
 
 void drawStartMenu() {
@@ -241,7 +247,7 @@ void drawStartMenu() {
 	for (int i = 0; i < numStartOptions; i++) {
 		startOptions[i].draw();
 	}
-	startDisplay.draw();
+	startDisplay.draw(false);
 	
 	if (startOptions[0].mouseOver) {
 		gameState = GAMEPLAY;
@@ -337,7 +343,7 @@ void drawPauseMenu() {
 	for (int i = 0; i < numPauseOptions; i++) {
 		pauseOptions[i].draw();
 	}
-	pauseDisplay.draw();
+	pauseDisplay.draw(false);
 	
 	if (pauseOptions[0].mouseOver) {
 		gameState = GAMEPLAY;

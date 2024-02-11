@@ -18,6 +18,7 @@ class MenuOption {
     	rect(x, y, w, h);
     	fill(0);
     	textAlign(CENTER, CENTER);
+		textSize(40);
     	text(label, x + w / 2, y + h / 2);
 	}
 

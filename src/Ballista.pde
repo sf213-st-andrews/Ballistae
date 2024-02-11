@@ -118,7 +118,7 @@ class Ballista extends Particle implements Rectangle {
 	}
 	void displayAmmo() {
 		ammoDisplay.updateText("" + ammo);
-		ammoDisplay.draw();
+		ammoDisplay.draw(true);
 	}
 	// Draw
 	void draw() {

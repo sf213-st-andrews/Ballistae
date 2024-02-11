@@ -26,13 +26,15 @@ class Display {
 		this.text = text;
 	}
 
-	void draw() {
-		fill(0,0,0);
-		// textSize(textSize+3);
-		text(text, position[0]+3, position[1]);
+	void draw(boolean hasShadow) {
+		textSize(textSize);
+		
+		if (hasShadow) {
+			fill(0,0,0);
+			text(text, position[0]+3, position[1]);
+		}
 		
 		fill(rgb[0], rgb[1], rgb[2]);
-		textSize(textSize);
 		text(text, position[0], position[1]);
 
 	}
