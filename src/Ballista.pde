@@ -11,6 +11,7 @@ class Ballista extends Particle implements Rectangle {
 	PVector area;
 	private int ammo;
 	private Display ammoDisplay;
+	private int hasFired;
 	private ArrayList<Bomb> bombs;
 	ArrayList<Explosion> explosions;
 
@@ -22,10 +23,12 @@ class Ballista extends Particle implements Rectangle {
 		this.halfRadius = (int) (area.x / 2);// could be private static
 
 		this.ammo = 99;
+		this.ammoDisplay = new Display("" + ammo, super.position.x + halfRadius, super.position.y + halfRadius);
+		this.hasFired = 0;
+
 		this.bombs = bombs;
 		this.explosions = explosions;
 
-		this.ammoDisplay = new Display("" + ammo, super.position.x + halfRadius, super.position.y + halfRadius);
 	}
 
 	// Fire a bomb towards the mouse position
@@ -35,6 +38,7 @@ class Ballista extends Particle implements Rectangle {
 		(mouseX - (super.position.x + halfRadius)) * magReduce, (mouseY - super.position.y) * magReduce,
 		explosions));
 		ammo -= 1;
+		hasFired = 16;
 	}
 
 	PVector getArea() {
@@ -101,7 +105,11 @@ class Ballista extends Particle implements Rectangle {
 	}
 	void drawBuilding() {
 		// Draw ballista
-		fill(165, 42, 42);
+		fill(16*hasFired, 4*hasFired, 0);
+		if (hasFired > 0) {
+			hasFired -= 1;
+		}
+		
 		ellipse(super.position.x + halfRadius, super.position.y, area.x, area.x);
 		// Draw tower
 		fill(150);

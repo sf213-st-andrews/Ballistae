@@ -4,7 +4,22 @@ static final int screen_width_h		= screen_width/2;
 static final int screen_height		= 900;
 static final int screen_height_h	= screen_height/2;
 static final int ground_height		= 80;
+// GUI and User Input
+static final int numKeys = 5;
+boolean keyLog[];
+// int score = 0;
+public static final int START_MENU	= 0;// 0 Start Menu
+public static final int GAMEPLAY	= 1;// 1 Gameplay
+public static final int PAUSE_MENU	= 2;// 2 Pause Menu
+int gameState;
+// Start Menu
+static final int numStartOptions	= 3;
+static final int optionWidth		= 200;
+static final int optionHeight		= 50;
+MenuOption startOptions[];
+Display startDisplay;
 
+// Gameplay
 // Physics
 public static final float DAMPING = 0.995;
 Gravity gravity	= new Gravity(new PVector(0f, 0.2f));// 0.2f
@@ -22,18 +37,11 @@ ArrayList<Bomb> bombs;			// Pool of ammunition
 ArrayList<Explosion> explosions;// Pool of explosions
 ArrayList<Meteor> meteors;		// Pool of meteors
 
-// GUI and User Input
-static final int numKeys = 5;
-boolean keyLog[];
-// int score = 0;
-public static final int START_MENU	= 0;// 0 Start Menu
-public static final int GAMEPLAY	= 1;// 1 Gameplay
-public static final int PAUSE_MENU	= 2;// 2 Pause Menu
-int gameState;
-static final int numOptions			= 3;
-static final int optionWidth		= 200;
-static final int optionHeight		= 50;
-MenuOption options[];
+// Pause Menu
+static final int numPauseOptions	= 3;
+MenuOption pauseOptions[];
+Display pauseDisplay;// Use option dimensions defined earlier
+
 
 void settings() {
 	size(screen_width, screen_height);
@@ -53,13 +61,16 @@ void setup() {
 
 	setupMenu();
 	setupGame();// Should the game be set up here? Make a loading screen?
+	setupPause();
 }
 
 void setupMenu() {
-	options = new MenuOption[numOptions];
-	options[0] = new MenuOption("Play",		screen_width_h - optionWidth/2, screen_height_h - 200, optionWidth, optionHeight);
-	options[1] = new MenuOption("Restart",	screen_width_h - optionWidth/2, screen_height_h - 100, optionWidth, optionHeight);
-	options[2] = new MenuOption("Exit",		screen_width_h - optionWidth/2, screen_height_h + 200, optionWidth, optionHeight);
+	startOptions	= new MenuOption[numStartOptions];
+	startOptions[0]	= new MenuOption("Play",		screen_width_h - optionWidth/2, screen_height_h - 300, optionWidth, optionHeight);
+	startOptions[1]	= new MenuOption("Restart",	screen_width_h - optionWidth/2, screen_height_h - 100, optionWidth, optionHeight);
+	startOptions[2]	= new MenuOption("Exit",		screen_width_h - optionWidth/2, screen_height_h + 200, optionWidth, optionHeight);
+
+	startDisplay = new Display(0, 255, 128, 16, "Press ENTER to Play!", screen_width_h, screen_height_h - 200);
 }
 
 void setupGame() {
@@ -84,11 +95,15 @@ void setupGame() {
 	for(int i = 1; i <= nBallis; i++) {
 		ballistae[i-1] = new Ballista(i*gap + (i-1)*ballistaWidth, screen_height - 100, bombs, explosions);
 	}
+}
+
+void setupPause() {
+	pauseOptions	= new MenuOption[numPauseOptions];
+	pauseOptions[0]	= new MenuOption("Resume",	screen_width_h - optionWidth/2, screen_height_h - 300, optionWidth, optionHeight);
+	pauseOptions[1]	= new MenuOption("Restart",	screen_width_h - optionWidth/2, screen_height_h - 100, optionWidth, optionHeight);
+	pauseOptions[2]	= new MenuOption("Return",	screen_width_h - optionWidth/2, screen_height_h + 200, optionWidth, optionHeight);
 	
-	// Meteors // This is Test Meteor
-	meteors.add(new Meteor(250, 450, 
-		0, 0, 
-		50, explosions));
+	pauseDisplay	= new Display(0, 255, 128, 16, "Press ENTER Resume!", screen_width_h, screen_height_h - 200);
 }
 
 void spawnWave(int waveSize) {
@@ -102,15 +117,39 @@ void spawnWave(int waveSize) {
 }
 
 void mousePressed() {
-	for (int i = 0; i < numOptions; i++) {
-		if (options[i].isMouseOver()) {
-			options[i].handleMouseClick();
-		}
+	switch (gameState) {
+		case START_MENU:
+			for (int i = 0; i < numStartOptions; i++) {
+				if (startOptions[i].isMouseOver()) {
+					startOptions[i].handleMouseClick();
+				}
+			}
+		break;
+
+		case GAMEPLAY:
+			for (int i = 0; i < nBallis; i++) {
+				ballistae[i].fireBomb();
+			}
+		break;
+
+		case PAUSE_MENU:
+			for (int i = 0; i < numPauseOptions; i++) {
+				if (pauseOptions[i].isMouseOver()) {
+					pauseOptions[i].handleMouseClick();
+				}
+			}
+		break;
+
+		default:
+			System.out.println("Game Exited On MousePress: " + gameState);
+			exit();
+		break;
 	}
 }
 
 void keyPressed() {
-  // Not using Switch Statement b/c two buttons can be pressed at once
+	// Not using Switch Statement b/c two buttons can be pressed at once
+	// Unfortunatly, can press keys while paused.
 	if (key == '1' && keyLog[0]) {
 		keyLog[0] = false;
 		ballistae[0].fireBomb();
@@ -133,9 +172,28 @@ void keyPressed() {
 		keyLog[4] = false;
 		spawnWave(6);
 	}
-	if (keyCode == ENTER && gameState != START_MENU) {
-		// Cannot Pause Game while in Start Menu
-		gameState = ((gameState + 1) % 3) + 1;// Swaps between 1 and 2
+	if (keyCode == ENTER) {
+		switch (gameState) {
+			case START_MENU:
+				gameState = GAMEPLAY;
+			break;
+			
+			case GAMEPLAY:
+				gameState = PAUSE_MENU;
+				fill(0,0,0, 50);
+				rect(0,0, screen_width, screen_height);
+			break;
+
+			case PAUSE_MENU:
+				gameState = GAMEPLAY;
+			break;
+
+			default:
+				System.out.println("Game Exited On KeyPress: " + gameState);
+				exit();
+			break;
+
+		}
 	}
 }
 
@@ -172,29 +230,32 @@ void draw() {
 		break;
 
 		default :
-			drawStartMenu();
+			System.out.println("Game Exited: " + gameState);
+			exit();
 		break;	
 	}
 }
 
 void drawStartMenu() {
 	background(0,0,0);// Black
-	for (int i = 0; i < numOptions; i++) {
-		options[i].draw();
+	for (int i = 0; i < numStartOptions; i++) {
+		startOptions[i].draw();
 	}
-	if (options[0].mouseOver) {
-		gameState = 1;
-		options[0].mouseOver = false;
+	startDisplay.draw();
+	
+	if (startOptions[0].mouseOver) {
+		gameState = GAMEPLAY;
+		startOptions[0].mouseOver = false;
 		return;
 	}
-	if (options[1].mouseOver) {
-		gameState = 1;
-		options[1].mouseOver = false;
+	if (startOptions[1].mouseOver) {
+		gameState = GAMEPLAY;
+		startOptions[1].mouseOver = false;
 		setupGame();// Restarts the game
 		return;
 	}
-	if (options[2].mouseOver) {
-		exit();
+	if (startOptions[2].mouseOver) {
+		gameState = -1;
 		return;
 	}
 }
@@ -273,6 +334,24 @@ void drawGameplay() {
 	}
 }
 void drawPauseMenu() {
-	fill(0,0,0, 100);
-	rect(0,0, screen_width, screen_height);
+	for (int i = 0; i < numPauseOptions; i++) {
+		pauseOptions[i].draw();
+	}
+	pauseDisplay.draw();
+	
+	if (pauseOptions[0].mouseOver) {
+		gameState = GAMEPLAY;
+		pauseOptions[0].mouseOver = false;
+		return;
+	}
+	if (pauseOptions[1].mouseOver) {
+		gameState = GAMEPLAY;
+		pauseOptions[1].mouseOver = false;
+		setupGame();// Restarts the game
+		return;
+	}
+	if (pauseOptions[2].mouseOver) {
+		gameState = START_MENU;
+		return;
+	}
 }
