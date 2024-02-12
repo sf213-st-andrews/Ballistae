@@ -129,7 +129,7 @@ void setupPause() {
 }
 
 void spawnWave(int waveSize, int numWaveParts) {
-	for (int j; j < numWaveParts; j++) {
+	for (int j = 0; j < numWaveParts; j++) {
 		for (int i = 0; i < waveSize; i++) {
 			meteors.add(new Meteor(
 			(float)random(100, screen_width - 100), 
