@@ -113,7 +113,7 @@ void setupGame() {
 		ballistae[i-1] = new Ballista(i*gap + (i-1)*ballistaWidth, screen_height - 100, bombs, explosions);
 	}
 	// Meteors: First Wave
-	spawnWave(2);
+	spawnWave(2, 1);
 }
 
 void setupPause() {
@@ -128,13 +128,15 @@ void setupPause() {
 	pauseDisplay[2]	= new Display(64, 255, 64, 24, "Return to Main Menu",		screen_width_h + 300, screen_height_h - 80);
 }
 
-void spawnWave(int waveSize) {
-	for (int i = 0; i < waveSize; i++) {
-		meteors.add(new Meteor(
+void spawnWave(int waveSize, int numWaveParts) {
+	for (int j; j < numWaveParts; j++) {
+		for (int i = 0; i < waveSize; i++) {
+			meteors.add(new Meteor(
 			(float)random(100, screen_width - 100), 
-			(float)random(-400, -100), 
+			(float)random(-400 - (j*200), -100 - (j*200)), 
 				(float)random(-4, 4), 0f, 
 				(int) random(30, 70), explosions));
+		}
 	}
 }
 
@@ -314,7 +316,7 @@ void drawGameplay() {
 	// GUI & Wave/Score
 	if (waveManager.updateWave()) {// New Wave Update
 		// Spawn new wave of meteors
-		spawnWave(waveManager.scoreMultiplier * 4);
+		spawnWave(waveManager.scoreMultiplier * 4, 2);
 		// Cities
 		for (int i = 0; i < nCities; i++) {
 			for (int j = meteors.size() - 1; j >= 0; j--) {
