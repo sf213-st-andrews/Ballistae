@@ -1,6 +1,6 @@
 // WaveManager.pde
 
-private static int WAVE_DURATION = 480;// 60 = 1 second
+private static int WAVE_DURATION = 480;// 60 = 1 second, this is 8 seconds
 
 class WaveManager {
 	public int wave;
@@ -11,6 +11,10 @@ class WaveManager {
 		this.wave = 1;
 		setMultiplier();
 		this.lifetime = WAVE_DURATION;
+	}
+
+	public int getWaveDuration() {
+		return WAVE_DURATION;
 	}
 
 	public void setMultiplier() {

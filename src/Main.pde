@@ -45,6 +45,10 @@ City cities[];
 // Ballista
 int nBallis = 3;
 Ballista ballistae[];
+// Bomber
+public static final float bomberIX	= 0;
+public static final float bomberIY	= 50;
+Bomber bomber;
 // ArrayLists
 ArrayList<Bomb> bombs;			// Pool of ammunition
 ArrayList<Explosion> explosions;// Pool of explosions
@@ -115,7 +119,9 @@ void setupGame() {
 		ballistae[i-1] = new Ballista(i*gap + (i-1)*ballistaWidth, screen_height - 100, bombs, explosions);
 	}
 	// Meteors: First Wave
-	spawnWave(2, 1);
+	spawnWave(4, 1);
+	// Bomber
+	bomber = new Bomber(bomberIX, bomberIY, meteors, explosions);
 }
 
 void setupPause() {
@@ -376,16 +382,14 @@ void drawGameplay() {
 		if (meteor.exploded) {
 			score += meteor.getScore() * waveManager.scoreMultiplier;
 			// If Radius is big enough, allow for splitting into two
-			if (waveManager.isPostWaveI() && meteor.getRadius() > 60) {
+			if (waveManager.isPostWaveI() && meteor.getRadius() >= 60) {
 				int r			= meteor.getRadius();
 				PVector pos		= meteor.position;
-				// int numShards	= (int) random(2, 5);
-				// for (int j = 0; i < numShards; j++) {
-				// 	meteors.add(new Meteor((float)random(pos.x - r, pos.x + r), (float)random(pos.y - r, pos.y + r), 0, 0, r - r/4, explosions));
+				int numShards	= r/30;
+				for (int j = 0; j < numShards; j++) {
+					meteors.add(new Meteor((float)random(pos.x - r, pos.x + r), (float)random(pos.y - r, pos.y + r), 0, 0, r - r/2, explosions));
 				
-				// }
-				meteors.add(new Meteor((float)random(pos.x - r, pos.x + r), (float)random(pos.y - r, pos.y + r), 0, 0, r - r/4, explosions));
-				meteors.add(new Meteor((float)random(pos.x - r, pos.x + r), (float)random(pos.y - r, pos.y + r), 0, 0, r - r/4, explosions));
+				}
 			}
 			meteors.remove(i);
 			continue;
@@ -397,6 +401,16 @@ void drawGameplay() {
 		gravity.updateForce(meteor);
 		drag.updateForce(meteor);
 		meteor.draw();
+	}
+	// Bomber
+	if ((waveManager.wave % 3) == 0) {
+		//Every 3rd Wave
+		if (waveManager.lifetime == waveManager.getWaveDuration()) {
+			bomber.setBomberPos(bomberIX, bomberIY);// Reset position for wave beggining
+		}
+		bomber.moveBomber(screen_width/waveManager.getWaveDuration());
+		bomber.updateTimer();
+		bomber.draw();
 	}
 	// Bombs
 	for (int i = bombs.size() - 1; i >= 0; i--) {
