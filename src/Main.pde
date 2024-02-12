@@ -8,9 +8,11 @@ static final int ground_height		= 80;
 static final int numKeys = 5;
 boolean keyLog[];
 // GUI
+public static final int GAME_EXIT	=-1;//-1 Game Exit
 public static final int START_MENU	= 0;// 0 Start Menu
 public static final int GAMEPLAY	= 1;// 1 Gameplay
 public static final int PAUSE_MENU	= 2;// 2 Pause Menu
+
 public boolean 			G_SETUP		= false;
 int gameState;
 // Start Menu
@@ -133,7 +135,7 @@ void spawnWave(int waveSize, int numWaveParts) {
 		for (int i = 0; i < waveSize; i++) {
 			meteors.add(new Meteor(
 			(float)random(100, screen_width - 100), 
-			(float)random(-400 - (j*200), -100 - (j*200)), 
+			(float)random(-400 - (j*600), -100 - (j*600)), 
 				(float)random(-4, 4), 0f, 
 				(int) random(30, 70), explosions));
 		}
@@ -179,6 +181,9 @@ void mousePressed() {
 }
 
 void keyPressed() {
+	// if (key == 'l') {
+	// 	waveManager.wave = 30;// Debugging
+	// }
 	// Not using Switch Statement b/c two buttons can be pressed at once
 	// Unfortunatly, can press keys while paused.
 	if (key == '1' && keyLog[0]) {
@@ -299,11 +304,11 @@ void drawStartMenu() {
 	if (startOptions[1].mouseOver) {
 		gameState = GAMEPLAY;
 		startOptions[1].mouseOver = false;
-		setupGame();// Restarts the game
+		setupGame();// Re/Starts the game
 		return;
 	}
 	if (startOptions[2].mouseOver) {
-		gameState = -1;
+		gameState = GAME_EXIT;
 		return;
 	}
 }
@@ -316,7 +321,8 @@ void drawGameplay() {
 	// GUI & Wave/Score
 	if (waveManager.updateWave()) {// New Wave Update
 		// Spawn new wave of meteors
-		spawnWave(waveManager.scoreMultiplier * 4, 2);
+		spawnWave(waveManager.scoreMultiplier * 4, constrain(waveManager.wave / 10, 1, 10));
+		// System.out.println("" + waveManager.scoreMultiplier * 4 + ", "+ ((waveManager.wave / 10) + 1));
 		// Cities
 		for (int i = 0; i < nCities; i++) {
 			for (int j = meteors.size() - 1; j >= 0; j--) {
